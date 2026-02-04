@@ -193,7 +193,7 @@ class ITViecAICrawler:
             # Convert to our standard format
             for job in raw_jobs:
                 job_entry = {
-                    'job_titles': job.get('title', 'N/A'),
+                    'job_names': job.get('title', 'N/A'),
                     'company_names': job.get('company', 'N/A'),
                     'salary': job.get('salary', 'Negotiable'),
                     'level': job.get('level', 'N/A'),

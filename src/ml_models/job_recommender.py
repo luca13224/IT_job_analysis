@@ -86,7 +86,7 @@ class JobRecommender:
         recommendations = filtered_df.nlargest(top_n, 'similarity')
         
         return recommendations[[
-            'job_titles', 'company_names', 'job_group', 'level', 
+            'job_names', 'company_names', 'job_group', 'level', 
             'city', 'salary_numeric', 'similarity', 'array_skills'
         ]]
     
@@ -129,7 +129,7 @@ def main():
     )
     
     for idx, row in recommendations.iterrows():
-        print(f"\n{idx+1}. {row['job_titles']}")
+        print(f"\n{idx+1}. {row['job_names']}")
         print(f"   Company: {row['company_names']}")
         print(f"   Level: {row['level']} | City: {row['city']}")
         print(f"   Salary: {row['salary_numeric']/1_000_000:.1f}M VND" if pd.notna(row['salary_numeric']) else "   Salary: Negotiable")

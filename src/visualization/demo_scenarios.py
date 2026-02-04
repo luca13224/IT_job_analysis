@@ -81,7 +81,7 @@ def demo_fresh_graduate(df, recommender):
         )
         
         for idx, (_, job) in enumerate(recommendations.iterrows(), 1):
-            with st.expander(f"#{idx} - {job['job_titles']}", expanded=(idx==1)):
+            with st.expander(f"#{idx} - {job['job_names']}", expanded=(idx==1)):
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     st.write(f"🏢 **Công ty:** {job['company_names']}")

@@ -59,6 +59,9 @@ pip list | findstr "streamlit pandas selenium"
 ```bash
 # Chạy AI Crawler Demo (Mock version - không cần OpenAI API)
 python src/crawler/ITViec_AI_demo.py
+
+# Gộp data AI vào data chính
+python merge_ai_data.py
 ```
 
 **Output:**
@@ -66,6 +69,7 @@ python src/crawler/ITViec_AI_demo.py
 - ✅ Tạo 10 jobs mẫu từ VNG, FPT, Tiki, Shopee...
 - ✅ Hiển thị bảng so sánh AI vs Traditional
 - ✅ Lưu file: `data_raw/ITViec_AI_demo.csv`
+- ✅ Tự động gộp vào `data_clean/clean_data.csv`
 
 **Thời gian:** ~5 giây (với mock data)
 

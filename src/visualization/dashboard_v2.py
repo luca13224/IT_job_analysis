@@ -161,6 +161,17 @@ def load_data():
     """Load and cache data"""
     try:
         df = pd.read_csv(CLEAN_CSV_PATH)
+        
+        # Normalize city names (chuẩn hóa tên thành phố)
+        city_mapping = {
+            'Hà Nội': 'Ha Noi',
+            'Hồ Chí Minh': 'Ho Chi Minh',
+            'Đà Nẵng': 'Da Nang',
+            'Cần Thơ': 'Can Tho',
+            'Hải Phòng': 'Hai Phong'
+        }
+        df['city'] = df['city'].replace(city_mapping)
+        
         return df
     except FileNotFoundError:
         st.error(f"❌ Không tìm thấy dữ liệu: {CLEAN_CSV_PATH}")
@@ -221,7 +232,7 @@ def display_job_card(job, show_match=False):
     
     st.markdown(f"""
     <div class="job-card">
-        <div class="job-title">💼 {job['job_titles']}</div>
+        <div class="job-title">💼 {job['job_names']}</div>
         <div class="job-company">🏢 {job['company_names']}</div>
         {match_html}
         <div class="job-details">
