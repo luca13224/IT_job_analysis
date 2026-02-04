@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.29+-red.svg)](https://streamlit.io)
 [![AI](https://img.shields.io/badge/AI-GPT--4%20Browser--Use-brightgreen.svg)](https://platform.openai.com)
-[![Data](https://img.shields.io/badge/Jobs-1,141-orange.svg)](data_clean/clean_data.csv)
+[![Data](https://img.shields.io/badge/Jobs-1,422-orange.svg)](data_clean/clean_data.csv)
 
 Dashboard phân tích thị trường tuyển dụng IT với **AI-powered crawler** (GPT-4 + Browser Use), **10 trang tương tác**, ML recommendations, career simulator. Sử dụng dữ liệu thực từ ITViec.vn.
 
@@ -17,16 +17,18 @@ Dashboard phân tích thị trường tuyển dụng IT với **AI-powered crawl
 ```bash
 streamlit run src/visualization/dashboard_v2.py
 ```
-🌐 Mở: **http://localhost:8501** - Dashboard với 1,150 jobs
+🌐 Mở: **http://localhost:8501** - Dashboard với 1,422 jobs sẵn có
 
-### Option 2: Full Demo (AI Crawler + Dashboard)
+### Option 2: Crawl thêm data với AI → Dashboard
 ```bash
-# 1. Demo AI crawler (tự động merge data)
-python src/crawler/ITViec_AI_demo.py
+# 1. Crawl thêm 100-200 jobs mới (AI mock)
+python src/crawler/ITViec_AI_demo.py --jobs 100
 
 # 2. Chạy dashboard
 streamlit run src/visualization/dashboard_v2.py
 ```
+
+**💡 Tips:** `--jobs 50` (nhanh) | `--jobs 100` (cân bằng) | `--jobs 200` (nhiều data)
 
 ---
 
@@ -42,12 +44,13 @@ streamlit run src/visualization/dashboard_v2.py
 ## ✨ Tính năng chính
 
 ### 🤖 AI-Powered Crawlers
-- **🎭 AI Demo Crawler** (Mock - Không cần API) ⭐ Khuyên dùng
-  - ✨ Demo khái niệm AI crawling bằng tiếng Việt
-  - 🔄 Tạo 10 jobs mẫu từ VNG, FPT, Tiki, Shopee...
-  - 📊 So sánh chi tiết AI vs Traditional (bảng + code)
-  - ⚡ Chạy trong 5 giây, không cần OpenAI API
-  - 🎓 Hoàn hảo cho thuyết trình
+- **🎭 AI Enhanced Crawler** (Mock - Không cần API) ⭐ Khuyên dùng
+  - ✨ Mô phỏng AI crawl với 50-200 jobs realistic
+  - 🏢 50+ công ty nổi tiếng (VNG, FPT, Tiki, Grab, Shopee...)
+  - 💼 6 job types: Backend, Frontend, Fullstack, Mobile, Data, DevOps
+  - 📊 Skills đa dạng theo từng vị trí
+  - ⚡ Tự động merge vào data chính
+  - 🎓 Hoàn hảo cho demo và thuyết trình
   
 - **GPT-4 Real Crawler** - Browser Use + LangChain (Cần API key)
   - Natural language task: "Go to ITViec, extract Backend jobs"
