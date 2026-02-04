@@ -1,0 +1,11 @@
+﻿job_title,company_name,salary,level,city,skills,description,crawled_at,method,source
+Software Engineer,FPT Software,Negotiable,mid,Ho Chi Minh,"Java, Python, Agile",Develop software applications,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+Data Scientist,SmartOSC,$1000-2000,senior,Ha Noi,"Python, R, Machine Learning",Analyze data and build models,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+DevOps Engineer,FSI,Negotiable,mid,Da Nang,"AWS, Docker, Kubernetes",Ensure system reliability,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+Frontend Developer,Seashore,$800-1500,junior,Ho Chi Minh,"React, JavaScript, HTML",Build user interfaces,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+Backend Developer,MISA,$1000-2000,mid,Ha Noi,"Python, Django, MySQL",Develop backend APIs,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+Fullstack Developer,OSJ,Negotiable,senior,Da Nang,"JavaScript, Python, React",Develop fullstack applications,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+QA Engineer,GEIC,$800-1500,mid,Ho Chi Minh,"Java, Selenium, TestNG",Test software applications,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+Cloud Engineer,Right Banner,Negotiable,senior,Ha Noi,"AWS, Azure, Google Cloud",Manage cloud infrastructure,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+Cybersecurity Engineer,3-500x1200,$1000-2000,mid,Da Nang,"Security, Networking, Linux",Protect systems from threats,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
+Artificial Intelligence Engineer,5-500x1200,Negotiable,senior,Ho Chi Minh,"Python, TensorFlow, Keras",Develop AI models,2026-02-04 22:09:14,Playwright + Groq Llama 3.3,VietnamWorks
