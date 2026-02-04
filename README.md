@@ -17,7 +17,7 @@ Dashboard phân tích thị trường tuyển dụng IT với **AI-powered crawl
 ```bash
 streamlit run src/visualization/dashboard_v2.py
 ```
-🌐 Mở: **http://localhost:8501** - Dashboard với 1,422 jobs sẵn có
+🌐 Mở: **http://localhost:8501** - Dashboard với 1,436 jobs sẵn có
 
 ### Option 2: Crawl thêm data THẬT với AI (FREE) → Dashboard
 ```bash
