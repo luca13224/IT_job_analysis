@@ -19,7 +19,6 @@ import asyncio
 import pandas as pd
 from datetime import datetime
 from langchain_openai import ChatOpenAI
-from browser_use import Agent
 from dotenv import load_dotenv
 import logging
 
@@ -29,6 +28,51 @@ logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
+
+
+# ==========================
+# LLM WRAPPER FOR BROWSER USE
+# ==========================
+class BrowserUseLLM:
+    """
+    Wrapper to make ChatOpenAI compatible with browser-use
+    Pass through all required attributes
+    """
+    def __init__(self, model="gpt-3.5-turbo", api_key=None):
+        self.model = model
+        self.model_name = model  # Required by browser-use
+        self.api_key = api_key
+        self.provider = "openai"  # Required by browser-use
+        
+        self._llm = ChatOpenAI(
+            model=model,
+            temperature=0,
+            openai_api_key=api_key
+        )
+    
+    def __getattr__(self, name):
+        """Pass through any missing attributes to underlying LLM"""
+        return getattr(self._llm, name)
+    
+    async def __call__(self, *args, **kwargs):
+        """Make the wrapper callable"""
+        return await self._llm.ainvoke(*args, **kwargs)
+    
+    def invoke(self, *args, **kwargs):
+        """Sync invoke"""
+        return self._llm.invoke(*args, **kwargs)
+    
+    async def ainvoke(self, *args, **kwargs):
+        """Async invoke"""
+        return await self._llm.ainvoke(*args, **kwargs)
+    
+    def bind(self, **kwargs):
+        """Bind additional parameters"""
+        return self._llm.bind(**kwargs)
+    
+    def with_structured_output(self, *args, **kwargs):
+        """Support structured output"""
+        return self._llm.with_structured_output(*args, **kwargs)
 
 class ITViecAICrawler:
     """
@@ -41,7 +85,7 @@ class ITViecAICrawler:
     - Natural language task definition
     """
     
-    def __init__(self, api_key=None, model="gpt-4", output_file="data_raw/ITViec_data_AI.csv"):
+    def __init__(self, api_key=None, model="gpt-3.5-turbo", output_file="data_raw/ITViec_data_AI.csv"):
         """
         Initialize AI crawler
         
@@ -58,10 +102,9 @@ class ITViecAICrawler:
         self.output_file = output_file
         self.jobs_data = []
         
-        # Initialize LLM
-        self.llm = ChatOpenAI(
+        # Initialize LLM with browser-use compatible wrapper
+        self.llm = BrowserUseLLM(
             model=model,
-            temperature=0,
             api_key=self.api_key
         )
         
@@ -104,24 +147,27 @@ class ITViecAICrawler:
         """
         
         try:
-            # Create AI agent
+            from browser_use import Agent
+            
+            # Create AI agent with wrapped LLM
             agent = Agent(
                 task=task,
-                llm=self.llm,
-                max_actions=50  # Allow enough actions for multi-page crawl
+                llm=self.llm
             )
             
             # Run agent
             logger.info("🤖 AI Agent is working...")
             result = await agent.run()
             
-            # Process results
+            # Process results  
             self._process_ai_results(result)
             
             logger.info(f"✅ Crawl completed! Found {len(self.jobs_data)} jobs")
             
         except Exception as e:
             logger.error(f"❌ Crawl failed: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
             raise
     
     def _process_ai_results(self, result):
@@ -227,9 +273,9 @@ async def demo_ai_crawler():
     print("No manual CSS selectors needed!\n")
     
     try:
-        # Initialize crawler
+        # Initialize crawler with GPT-3.5 (cheaper)
         crawler = ITViecAICrawler(
-            model="gpt-4",
+            model="gpt-3.5-turbo",  # Changed from gpt-4 to save costs
             output_file="data_raw/ITViec_data_AI.csv"
         )
         

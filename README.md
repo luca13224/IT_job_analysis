@@ -11,43 +11,69 @@ Dashboard phân tích thị trường tuyển dụng IT với **AI-powered crawl
 
 ---
 
-## 🚀 Chạy nhanh (3 bước)
+## 🚀 Chạy nhanh (1 lệnh)
 
-### Option 1: Dashboard Only (No API Key Needed)
+### ⚡ Demo Dashboard (Khuyên dùng - Không cần API)
 ```bash
-# 1. Cài đặt dependencies
-pip install -r requirements.txt
-
-# 2. Chạy dashboard với dữ liệu có sẵn
+# Chạy dashboard với 1,141 jobs có sẵn
 streamlit run src/visualization/dashboard_v2.py
-
-# 3. Mở trình duyệt tại: http://localhost:8501
 ```
+🌐 Mở trình duyệt: **http://localhost:8501**
 
-### Option 2: AI Crawler Demo (Requires OpenAI API)
+---
+
+### 🤖 Demo AI Crawler (Mock - Không cần API)
 ```bash
-# 1. Setup API key
-cp .env.example .env
-# Edit .env và thêm: OPENAI_API_KEY=sk-your-key-here
+# Demo AI crawling concept
+python src/crawler/ITViec_AI_demo.py
 
-# 2. Chạy AI crawler
-python src/crawler/ITViec_AI_crawler.py
-# → GPT-4 tự động crawl jobs thông minh!
-
-# 3. Xem so sánh AI vs Traditional crawler
+# Sau đó chạy dashboard
+streamlit run src/visualization/dashboard_v2.py
 ```
 
-💡 **Demo nhanh:** Dùng Option 1 với data có sẵn. Option 2 để thấy sức mạnh AI!
+📚 **Xem hướng dẫn chi tiết:** [QUICK_START.md](QUICK_START.md) - Toàn bộ flow từ crawl đến dashboard
+
+---
+
+### 📋 Lệnh đầy đủ cho Demo/Thuyết trình
+
+```bash
+# Bước 1: Kích hoạt môi trường
+.venv\Scripts\activate  # Windows
+source .venv/bin/activate  # Mac/Linux
+
+# Bước 2: Demo AI Crawler (tùy chọn)
+python src/crawler/ITViec_AI_demo.py
+
+# Bước 3: Chạy Dashboard
+streamlit run src/visualization/dashboard_v2.py
+```
+
+💡 **Tip:** Xem [QUICK_START.md](QUICK_START.md) để có:
+- ✅ Kịch bản demo đầy đủ cho thầy
+- ✅ Troubleshooting
+- ✅ Batch script tự động
+- ✅ Checklist chuẩn bị
 
 ## ✨ Tính năng chính
 
-### 🤖 AI-Powered Crawlers (NEW!)
-- **GPT-4 Intelligent Crawler** - Browser Use + LangChain
-  - ✨ Natural language task: "Go to ITViec, extract Backend jobs"
-  - 🔄 Self-adaptive to layout changes (no CSS selectors!)
-  - 🧠 AI understands page context
-  - 📊 Built-in comparison with traditional crawler
-- **Traditional Selenium Crawler** - Fast, free, stable backup
+### 🤖 AI-Powered Crawlers
+- **🎭 AI Demo Crawler** (Mock - Không cần API) ⭐ Khuyên dùng
+  - ✨ Demo khái niệm AI crawling bằng tiếng Việt
+  - 🔄 Tạo 10 jobs mẫu từ VNG, FPT, Tiki, Shopee...
+  - 📊 So sánh chi tiết AI vs Traditional (bảng + code)
+  - ⚡ Chạy trong 5 giây, không cần OpenAI API
+  - 🎓 Hoàn hảo cho thuyết trình
+  
+- **GPT-4 Real Crawler** - Browser Use + LangChain (Cần API key)
+  - Natural language task: "Go to ITViec, extract Backend jobs"
+  - Self-adaptive to layout changes
+  - AI understands page context
+  
+- **Traditional Selenium Crawler** - Fast, free, stable
+  - 298 dòng code với CSS selectors
+  - Crawl nhanh (3 phút), miễn phí
+  - Backup ổn định cho production
 
 ### 📊 Dashboard 10 trang
 1. **🏠 Tổng quan** - Metrics tổng quan thị trường
@@ -79,19 +105,25 @@ AI Crawling:** Browser Use, LangChain, GPT-4 ⚡ NEW!
 ## 📁 Cấu trúc Project
 
 ```
-IT-joenv.example           # 🔐 API key config template
+IT-job-analysis-VN-main/
+├── QUICK_START.md          # 📚 Hướng dẫn demo đầy đủ (MỚI)
+├── .env.example           # 🔐 API key config template
 ├── .streamlit/              # Streamlit config
 ├── data_clean/             # Dữ liệu đã xử lý
-│   └── clean_data.csv      # 1,141 jobs
+│   └── clean_data.csv      # 1,141 jobs (SẴN DÙNG)
+├── data_raw/
+│   ├── ITViec_data.csv     # Data gốc Selenium
+│   └── ITViec_AI_demo.csv  # Data từ AI demo (MỚI)
 ├── src/
 │   ├── crawler/           # Web crawlers
-│   │   ├── ITViec_AI_crawler.py  # 🤖 AI-powered (NEW!)
+│   │   ├── ITViec_AI_demo.py     # 🤖 AI Demo (MỚI - Khuyên dùng)
+│   │   ├── ITViec_AI_crawler.py  # AI Real (cần API key)
 │   │   ├── ITViec_crawling.py    # Traditional Selenium
 │   │   └── topcv_crawling.py     # TopCV crawler
 │   ├── ml_models/         # AI models
 │   │   └── job_recommender.py    # TF-IDF matching
 │   └── visualization/     # Dashboard modules (10 pages)
-│       ├── dashboard_v2.py       # Main dashboard
+│       ├── dashboard_v2.py       # 🎯 Main Dashboard
 │       ├── career_simulator.py   # Career path
 │       ├── compare_tool.py       # Comparison tool
 │       ├── export_tools.py       # Export reports
@@ -99,11 +131,11 @@ IT-joenv.example           # 🔐 API key config template
 └── requirements.txt       # Dependencies
 ```
 
-**💡 Key Files:**
-- `ITViec_AI_crawler.py` - AI-powered crawler với Browser Use
-- `ITViec_crawling.py` - Traditional Selenium (backup)
-- `.env.example` - Template cho OpenAI API key run_dashboard_v2.bat  # Quick launch
-```
+**💡 Files quan trọng:**
+- `QUICK_START.md` - **Hướng dẫn demo đầy đủ cho thuyết trình** (MỚI)
+- `ITViec_AI_demo.py` - AI crawler mock (không cần API)
+- `dashboard_v2.py` - Dashboard chính với 10 trang
+- `clean_data.csv` - 1,141 jobs sẵn dùng
 
 
 ## 📊 Insights chính
