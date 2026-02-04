@@ -1,117 +1,36 @@
-# 🇻🇳 Vietnam IT Job Market Analysis - Job Salary Analytics
+<div align="center">
 
-Dự án phân tích thị trường việc làm IT tại Việt Nam với tập trung vào **phân tích xu hướng lương** và **kỹ năng**. Sử dụng Web Crawling, NLP, Machine Learning và Data Visualization để cung cấp insights chi tiết về thị trường tuyển dụng IT.
+# 🇻🇳 Vietnam IT Job Market Analysis
 
-## ✨ New Features (Version 2.0)
+### 📊 Interactive Dashboard with AI-Powered Career Insights
 
-🎉 **Major Update!** Xem chi tiết tại [NEW_FEATURES.md](NEW_FEATURES.md)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.29+-red.svg)](https://streamlit.io)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Data](https://img.shields.io/badge/Jobs-1,141-orange.svg)](data_clean/clean_data.csv)
 
-- ✅ **TopCV Crawler** - Mở rộng nguồn dữ liệu với TopCV.vn
-- ✅ **Enhanced Dashboard UI/UX** - Thiết kế hiện đại với gradient theme
-- ✅ **AI Job Recommendations** - Gợi ý việc làm thông minh dựa trên kỹ năng
-- ✅ **Streamlit Cloud Ready** - Deploy lên cloud trong 5 phút
+*Dashboard phân tích thị trường tuyển dụng IT với **10 trang tương tác**, AI chatbot, và công cụ mô phỏng lộ trình nghề nghiệp*
 
-## 🎯 Mục Tiêu Dự Án
+[Demo](#-chạy-nhanh-3-bước) • [Features](#-tính-năng-chính) • [Installation](#-chạy-nhanh-3-bước) • [Documentation](#-insights-chính)
 
-- **Crawl dữ liệu**: Thu thập thông tin từ ITViec, TopCV ✨NEW, VietnamWorks
-- **Phân tích lương**: Phân tích xu hướng, phân phối và dự đoán mức lương theo vị trí, cấp độ, địa điểm
-- **Phân tích kỹ năng**: Trích xuất và phân tích các kỹ năng hot nhất, kỹ năng đi cùng nhau
-- **Machine Learning**: Dự đoán lương + Gợi ý việc làm AI ✨NEW
-- **Visualization**: Dashboard tương tác hiện đại với 5 trang phân tích ✨NEW
+</div>
 
-## 🛠 Công Nghệ Sử Dụng
+---
 
-### Web Crawling & Data Collection
-- **Selenium** - Browser automation
-- **BeautifulSoup4** - HTML parsing  
-- **Scrapy** - Advanced web scraping
+## 🚀 Chạy nhanh (3 bước)
 
-### Data Processing & Analysis
-- **Pandas** - Data manipulation
-- **NumPy** - Numerical computing
+### Prerequisites
+- Python 3.11 or higher
+- Git
 
-### NLP & Text Processing
-- **NLTK** - Natural language processing
-- **spaCy** - Advanced NLP
-- **Underthesea** - Vietnamese NLP
-- **WordCloud** - Visualization
-
-### Machine Learning
-- **Scikit-learn** - ML algorithms
-- **XGBoost** - Gradient boosting
-- **LightGBM** - Fast gradient boosting
-- **CatBoost** - Categorical features
-
-### Data Visualization
-- **Matplotlib & Seaborn** - Static plots
-- **Plotly** - Interactive charts
-- **Streamlit** - Web dashboard
-
-## 📁 Cấu Trúc Dự Án
-
-```
-IT-job-analysis-VN-main/
-│
-├── config/                      # Configuration files
-│   └── config.py               # Project configuration
-│
-├── data_raw/                   # Raw crawled data
-│   └── ITViec_data.csv
-│
-├── data_clean/                 # Cleaned data
-│   └── clean_data.csv
-│
-├── src/                        # Source code
-│   ├── crawler/               # Web crawling modules
-│   │   └── ITViec_crawling.py
-│   │
-│   ├── data_processing/       # Data cleaning & processing
-│   │   └── processor.py
-│   │
-│   ├── analysis/              # Analysis modules
-│   │   ├── EDA.py
-│   │   └── salary_analytics.py
-│   │
-│   ├── nlp/                   # NLP & skill extraction
-│   │   └── skill_analyzer.py
-│   │
-│   ├── ml_models/             # Machine learning models
-│   │   └── salary_prediction.py
-│   │
-│   └── visualization/         # Visualization & dashboard
-│       └── dashboard.py
-│
-├── models/                     # Trained ML models
-│   └── salary_predictor.pkl
-│
-├── outputs/                    # Analysis outputs
-│   ├── salary_distribution.png
-│   ├── salary_trends.png
-│   ├── feature_importance.png
-│   └── reports/
-│
-├── notebooks/                  # Jupyter notebooks
-│   ├── crawling_test.ipynb
-│   ├── cleanning_data.ipynb
-│   └── eda.ipynb
-│
-├── docs/                       # Documentation
-│
-├── main.py                     # Main pipeline
-├── requirements.txt            # Dependencies
-└── README.md                   # This file
-```
-
-## 🚀 Hướng Dẫn Cài Đặt & Chạy Dự Án
-
-### Bước 1: Clone Repository & Setup Environment
+### Installation
 
 ```bash
-# Clone repository
-git clone <your-repo-url>
-cd IT-job-analysis-VN-main
+# 1. Clone repository
+git clone https://github.com/luca13224/IT_job_analysis.git
+cd IT_job_analysis
 
-# Create virtual environment
+# 2. Create virtual environment (khuyến nghị)
 python -m venv .venv
 
 # Activate virtual environment
@@ -120,244 +39,265 @@ python -m venv .venv
 # Linux/Mac:
 source .venv/bin/activate
 
-# Install dependencies
+# 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Run dashboard
+streamlit run src/visualization/dashboard_v2.py
+
+# 5. Mở browser: http://localhost:8501
+#    ⚠️ KHÔNG dùng 0.0.0.0:8501 (sẽ lỗi ERR_ADDRESS_INVALID)
 ```
 
-### Bước 2: Cấu Hình Dự Án
+### 🎯 Quick Test
+```bash
+# Kiểm tra cài đặt thành công
+python -c "import streamlit; import pandas; import plotly; print('✅ All dependencies OK!')"
+```
 
-File cấu hình tại `config/config.py` đã được thiết lập sẵn. Bạn có thể tùy chỉnh:
-- Đường dẫn thư mục
-- Crawler settings
-- ML model parameters
+## ✨ Tính năng chính
 
-### Bước 3: Thu Thập Dữ Liệu (Data Crawling)
+### 📊 Dashboard 10 trang
+1. **🏠 Tổng quan** - Metrics tổng quan thị trường
+2. **📊 Phân tích thị trường** - Phân bố jobs theo nhóm nghề/cấp độ/thành phố
+3. **🔍 Gợi ý việc làm** - AI matching dựa trên kỹ năng (TF-IDF + Cosine Similarity)
+4. **💰 Phân tích lương** - Phân tích chi tiết mức lương theo vị trí
+5. **🎓 Phân tích kỹ năng** - Top skills, skill combinations, trends
+6. **🎬 Kịch bản Demo** - 5 pre-built scenarios cho presentation
+7. **🚀 Mô phỏng lộ trình** - Career path 5-10 năm với salary projection
+8. **⚖️ Công cụ so sánh** - So sánh jobs/cities/companies
+9. **📥 Xuất báo cáo** - Export Excel/CSV/JSON + generate reports
+10. **🤖 Trợ lý AI** - Chatbot Q&A về thị trường IT
+
+### 🎯 Crawlers
+- **ITViec.vn** - 1,141 jobs crawled
+- **TopCV.vn** - Multi-page crawler với rate limiting
+
+
+## 🛠 Tech Stack
+
+- **Web Crawling:** Selenium, BeautifulSoup4
+- **Data:** Pandas, NumPy
+- **NLP:** NLTK, spaCy, Underthesea (Vietnamese)
+- **ML:** Scikit-learn (TF-IDF, Cosine Similarity)
+- **Visualization:** Plotly, Streamlit
+- **UI/UX:** Custom CSS với gradient theme (Purple/Blue)
+
+## 📁 Cấu trúc Project
+
+```
+IT-job-analysis-VN-main/
+├── .streamlit/                    # Streamlit configuration
+│   └── config.toml               # Server & UI settings
+├── config/                        # Application config
+├── data_clean/                    # ✅ Processed data (ready to use)
+│   └── clean_data.csv            # 1,141 IT jobs from ITViec
+├── data_raw/                      # Raw scraped data
+├── src/
+│   ├── crawler/                  # Web scraping modules
+│   │   ├── ITViec_crawling.py   # ITViec scraper
+│   │   └── topcv_crawling.py    # TopCV scraper
+│   ├── ml_models/                # AI/ML models
+│   │   └── job_recommender.py   # TF-IDF + Cosine Similarity
+│   └── visualization/            # 📊 Dashboard modules (10 pages)
+│       ├── dashboard_v2.py       # 🏠 Main entry point
+│       ├── demo_scenarios.py     # 🎬 5 pre-built demos
+│       ├── career_simulator.py   # 🚀 Career path projection
+│       ├── compare_tool.py       # ⚖️ Job/City/Company comparison
+│       ├── export_tools.py       # 📥 Excel/CSV/JSON export
+│       ├── chatbot.py            # 🤖 AI Q&A assistant
+│       └── animations.py         # 🎨 UI animations
+├── notebooks/                     # Jupyter analysis
+│   └── eda.ipynb                 # Exploratory Data Analysis
+├── requirements.txt               # Python dependencies
+├── run_dashboard_v2.bat          # 🚀 Quick launch script (Windows)
+└── README.md                     # 📖 This file
+```
+
+> **💡 Tip:** Dữ liệu đã được xử lý sẵn tại `data_clean/clean_data.csv`. Bạn không cần chạy crawler để demo!
+
+
+## 📊 Insights chính
+
+**Thống kê tổng quan:**
+- 1,141 jobs từ ITViec.vn
+- 15+ nhóm nghề nghiệp
+- Lương trung bình: 20-40M VND
+
+**Top 5 nghề hot:**
+1. Backend Developer
+2. Frontend Developer  
+3. Fullstack Developer
+4. Data / AI
+5. Mobile Developer
+
+**Top 5 skills cần thiết:**
+1. JavaScript / TypeScript
+2. Python
+3. React / Vue
+4. Docker / Kubernetes
+5. AWS / Cloud
+
+**Insights lương:**
+- Backend Senior: 30-50M VND
+- Data/AI Engineer: 35-60M VND
+- Frontend Mid: 20-35M VND
+- DevOps Engineer: 30-55M VND
+
+## 🎬 Demo Scenarios (cho Presentation)
+
+Dashboard có 5 kịch bản demo sẵn:
+
+1. **Fresh Graduate** - Sinh viên mới ra trường tìm việc
+2. **Experienced Dev** - Dev 2 năm muốn đổi việc
+3. **HR Analysis** - HR phân tích thị trường lương
+4. **Recruiter** - Nhà tuyển dụng tìm trending skills
+5. **Learner** - Người học chọn lộ trình (Frontend/Backend/Data)
+
+## 🚀 Deploy lên Streamlit Cloud
 
 ```bash
-# Crawl data from ITViec
-python src/crawler/ITViec_crawling.py
+# 1. Push code lên GitHub
+git add .
+git commit -m "Deploy dashboard"
+git push origin main
 
-# Chương trình sẽ:
-# 1. Mở trình duyệt Chrome
-# 2. Yêu cầu bạn đăng nhập ITViec
-# 3. Nhấn ENTER để bắt đầu crawl
-# 4. Lưu dữ liệu vào data_raw/ITViec_data.csv
+# 2. Vào https://streamlit.io/cloud
+# 3. Connect GitHub repo
+# 4. Main file: src/visualization/dashboard_v2.py
+# 5. Deploy!
 ```
 
-**Lưu ý**: Crawler có thể cần Chrome Driver. Nếu gặp lỗi, cài đặt:
-```bash
-pip install webdriver-manager
-```
+## 🎯 Workflow Demo gợi ý (15-20 phút)
 
-### Bước 4: Chạy Pipeline Phân Tích Hoàn Chỉnh
+1. **Intro (2p)** → Tổng quan + animated metrics
+2. **Market Analysis (3p)** → Charts & insights
+3. **Career Planning (4p)** → Mô phỏng 5-year roadmap
+4. **Comparison (3p)** → Backend vs Frontend
+5. **AI Assistant (4p)** → Live Q&A với chatbot
+6. **Export (2p)** → Download report
+7. **Q&A (2p)** → Use chatbot trả lời audience
 
-```bash
-# Run toàn bộ pipeline (recommended)
-python main.py
-```
+## 💡 Tips sử dụng
 
-Pipeline sẽ thực hiện:
-1. ✅ Data Processing - Làm sạch và chuẩn hóa dữ liệu
-2. ✅ Salary Analysis - Phân tích xu hướng lương
-3. ✅ Skill Analysis - Phân tích kỹ năng hot
-4. ✅ ML Models - Train mô hình dự đoán lương
+**Career Simulator:**
+- Input: Job group + Current level + Years (1-10)
+- Output: Timeline lương, skills cần học theo năm
+- Best for: Lập kế hoạch nghề nghiệp dài hạn
 
-### Bước 5: Xem Dashboard Tương Tác
+**Compare Tool:**
+- So sánh 2 jobs/cities/companies side-by-side
+- Visual charts + auto insights
+- Best for: Đưa ra quyết định nghề nghiệp
 
-```bash
-# Launch Streamlit dashboard
-streamlit run src/visualization/dashboard.py
-```
+**AI Chatbot:**
+- Hỏi về lương, skills, xu hướng, lộ trình
+- Quick buttons cho câu hỏi phổ biến
+- Best for: Q&A session trong demo
 
-Dashboard sẽ mở tại `http://localhost:8501` với các tính năng:
-- 💰 Salary Analysis - Phân tích lương theo nhiều chiều
-- 📈 Job Market Trends - Xu hướng thị trường
-- 🔧 Skills Analysis - Phân tích kỹ năng
-- 🌍 Geographic Distribution - Phân bố địa lý
-- 🎯 Career Recommendations - Gợi ý nghề nghiệp
-
-## 📊 Các Module Chi Tiết
-
-### 1. Data Processing (`src/data_processing/processor.py`)
-
-```python
-from src.data_processing.processor import DataProcessor
-
-processor = DataProcessor()
-processor.process_pipeline()
-processor.get_summary()
-```
-
-Chức năng:
-- Clean salary data (chuyển đổi sang VND)
-- Categorize skills (phân loại kỹ năng)
-- Extract job groups (nhóm công việc)
-- Standardize locations (chuẩn hóa địa điểm)
-- Remove duplicates
-
-### 2. Salary Analytics (`src/analysis/salary_analytics.py`)
-
-```python
-from src.analysis.salary_analytics import SalaryAnalyzer
-
-analyzer = SalaryAnalyzer(df)
-report = analyzer.generate_report()
-analyzer.plot_salary_distribution()
-```
-
-Phân tích:
-- Overall salary statistics
-- Salary by job group
-- Salary by experience level
-- Salary by city
-- Salary by skill
-- Trends over time
-
-### 3. Skill Analyzer (`src/nlp/skill_analyzer.py`)
-
-```python
-from src.nlp.skill_analyzer import SkillAnalyzer
-
-analyzer = SkillAnalyzer()
-trends = analyzer.analyze_skill_trends(df)
-cooccur = analyzer.get_skill_cooccurrence(df)
-recommendations = analyzer.generate_skill_recommendations(
-    job_group='Backend Developer',
-    current_skills=['python', 'django'],
-    df=df
-)
-```
-
-Phân tích:
-- Top in-demand skills
-- Skill categories (languages, frameworks, tools)
-- Skill co-occurrence (kỹ năng đi cùng nhau)
-- Skill recommendations
-
-### 4. ML Salary Prediction (`src/ml_models/salary_prediction.py`)
-
-```python
-from src.ml_models.salary_prediction import SalaryPredictor
-
-# Train model
-predictor = SalaryPredictor()
-predictor.train_model(df, model_type='xgboost')
-predictor.save_model()
-
-# Predict salary
-prediction = predictor.predict_salary(
-    job_group='Backend Developer',
-    level='senior',
-    city='Ho Chi Minh',
-    skills=['python', 'django', 'aws', 'docker']
-)
-print(f"Predicted salary: {prediction['predicted_salary_m']:.2f}M VND")
-```
-
-Models:
-- Random Forest
-- Gradient Boosting
-- XGBoost ⭐ (Best performance)
-- LightGBM
-
-## 📈 Kết Quả Phân Tích
-
-### Thống Kê Tổng Quan
-- **Tổng số việc làm**: ~1,000+ positions
-- **Job groups**: 15+ nhóm công việc
-- **Mức lương trung bình**: 20-40M VND
-- **Top job groups**: Backend Developer, Frontend Developer, Data/AI
-
-### Top In-Demand Skills
-1. **Programming Languages**: Python, Java, JavaScript, TypeScript
-2. **Frameworks**: React, Vue, Django, Spring Boot
-3. **Tools & DevOps**: Docker, Kubernetes, AWS, Git
-4. **Data & AI**: Machine Learning, TensorFlow, Pandas
-
-### Salary Insights
-- **Backend Developer (Senior)**: 30-50M VND
-- **Data/AI Engineer**: 35-60M VND
-- **DevOps Engineer**: 30-55M VND
-- **Frontend Developer (Mid)**: 20-35M VND
-
-### Top Paying Skills
-- Cloud (AWS, Azure, GCP): +30%
-- Machine Learning/AI: +25%
-- Kubernetes: +20%
-- Golang: +15%
-
-## 🎓 Hướng Dẫn Phát Triển Thêm
-
-### Mở Rộng Crawler
-```python
-# Add more job sites
-# src/crawler/topcv_crawling.py
-# src/crawler/vietnamworks_crawling.py
-```
-
-### Thêm Feature Mới
-```python
-# Add new features to ML model
-# In salary_prediction.py
-def prepare_features(self, df):
-    # Add company size feature
-    features['company_size'] = ...
-    # Add years of experience
-    features['years_exp'] = ...
-```
-
-### Custom Analysis
-```python
-# Create custom analysis in notebooks/
-# Example: Industry-specific analysis
-industry_df = df[df['domain_group'] == 'Finance']
-analyze_finance_jobs(industry_df)
-```
+**Export Tools:**
+- Excel có 2 sheets: Data + Summary
+- CSV/JSON cho research
+- Text reports với analysis
 
 ## 🐛 Troubleshooting
 
-### Lỗi crawling
-```bash
-# Cài lại webdriver-manager
-pip install --upgrade webdriver-manager
-```
+<details>
+<summary><b>Dashboard không chạy được</b></summary>
 
-### Lỗi encoding
 ```bash
-# Đọc file với encoding UTF-8
+# Cài lại dependencies
+pip install --upgrade streamlit pandas plotly
+
+# Kiểm tra Python version (cần >= 3.11)
+python --version
+```
+</details>
+
+<details>
+<summary><b>Lỗi "ERR_ADDRESS_INVALID" khi mở browser</b></summary>
+
+⚠️ **Không dùng** `http://0.0.0.0:8501`
+
+✅ **Dùng:** `http://localhost:8501` hoặc `http://127.0.0.1:8501`
+</details>
+
+<details>
+<summary><b>Thiếu file data</b></summary>
+
+Dữ liệu đã có sẵn tại `data_clean/clean_data.csv` (1,141 jobs). Không cần chạy crawler!
+</details>
+
+<details>
+<summary><b>Lỗi import module</b></summary>
+
+```bash
+# Đảm bảo chạy từ thư mục gốc
+cd IT_job_analysis
+
+# Kiểm tra cấu trúc thư mục
+ls src/visualization/dashboard_v2.py
+```
+</details>
+
+<details>
+<summary><b>Port 8501 đã bị chiếm</b></summary>
+
+```bash
+# Dùng port khác
+streamlit run src/visualization/dashboard_v2.py --server.port 8502
+```
+</details>
+
+<details>
+<summary><b>Lỗi encoding khi đọc CSV</b></summary>
+
+```python
+# Thêm encoding UTF-8
 df = pd.read_csv('data.csv', encoding='utf-8-sig')
 ```
-
-### Lỗi dependencies
-```bash
-# Cài lại tất cả dependencies
-pip install -r requirements.txt --force-reinstall
-```
+</details>
 
 ## 📚 Tài Liệu Tham Khảo
 
 - [Pandas Documentation](https://pandas.pydata.org/docs/)
 - [Scikit-learn Documentation](https://scikit-learn.org/)
 - [Streamlit Documentation](https://docs.streamlit.io/)
-- [XGBoost Documentation](https://xgboost.readthedocs.io/)
+- [Plotly Documentation](https://plotly.com/python/)
 
 ## 👥 Đóng Góp
 
-Mọi đóng góp đều được hoan nghênh! Vui lòng:
+Contributions are welcome! Vui lòng:
+
 1. Fork repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
+2. Create feature branch: `git checkout -b feature/AmazingFeature`
+3. Commit changes: `git commit -m 'Add AmazingFeature'`
+4. Push to branch: `git push origin feature/AmazingFeature`
 5. Open Pull Request
 
 ## 📝 License
 
-This project is licensed under the MIT License.
+MIT License - Xem [LICENSE](LICENSE) để biết thêm chi tiết.
 
-## 📧 Contact
+## 🙏 Acknowledgments
 
-Nếu có câu hỏi, vui lòng mở Issue trên GitHub.
+- Dữ liệu từ [ITViec.vn](https://itviec.com) - Vietnam's #1 IT Job Site
+- Built with [Streamlit](https://streamlit.io) - The fastest way to build data apps
+- Icons from [Icons8](https://icons8.com) - Free icons and design resources
+
+## 📧 Contact & Support
+
+- 📫 GitHub Issues: [Report bugs or request features](https://github.com/luca13224/IT_job_analysis/issues)
+- ⭐ Star this repo if you find it useful!
+- 🍴 Fork and customize for your needs
 
 ---
 
-**Made with ❤️ by Vietnam IT Job Market Analysis Team**
+<div align="center">
+
+**Made with ❤️ for the Vietnamese IT Community**
+
+[![GitHub stars](https://img.shields.io/github/stars/luca13224/IT_job_analysis?style=social)](https://github.com/luca13224/IT_job_analysis)
+[![GitHub forks](https://img.shields.io/github/forks/luca13224/IT_job_analysis?style=social)](https://github.com/luca13224/IT_job_analysis/fork)
+
+</div>

@@ -17,11 +17,16 @@ from config.config import CLEAN_CSV_PATH
 from src.analysis.salary_analytics import SalaryAnalyzer
 from src.nlp.skill_analyzer import SkillAnalyzer
 from src.ml_models.job_recommender import JobRecommender
+from src.visualization.demo_scenarios import show_demo_scenarios
+from src.visualization.career_simulator import show_career_simulator
+from src.visualization.compare_tool import show_compare_tool
+from src.visualization.export_tools import show_export_tools
+from src.visualization.chatbot import show_chatbot
 
 
 # Page config
 st.set_page_config(
-    page_title="Vietnam IT Job Market Analytics",
+    page_title="Phân tích thị trường việc làm IT Việt Nam",
     page_icon="💼",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -158,8 +163,8 @@ def load_data():
         df = pd.read_csv(CLEAN_CSV_PATH)
         return df
     except FileNotFoundError:
-        st.error(f"❌ Data file not found: {CLEAN_CSV_PATH}")
-        st.info("💡 Please run data processing first: `python src/data_processing/processor.py`")
+        st.error(f"❌ Không tìm thấy dữ liệu: {CLEAN_CSV_PATH}")
+        st.info("💡 Hãy chạy xử lý dữ liệu trước: `python src/data_processing/processor.py`")
         st.stop()
 
 
@@ -236,39 +241,41 @@ def main():
     # Header
     st.markdown("""
     <div class="main-header">
-        💼 Vietnam IT Job Market Analytics
+        💼 Phân tích thị trường việc làm IT Việt Nam
     </div>
     <p style="text-align: center; color: #718096; font-size: 1.1rem; margin-bottom: 2rem;">
-        Phân tích thị trường việc làm IT Việt Nam với AI-powered insights
+        Khai thác dữ liệu tuyển dụng IT với phân tích thông minh
     </p>
     """, unsafe_allow_html=True)
     
     # Load data
-    with st.spinner("🔄 Loading data..."):
+    with st.spinner("🔄 Đang tải dữ liệu..."):
         df = load_data()
         recommender = load_recommender()
     
     # Sidebar
     st.sidebar.image("https://img.icons8.com/fluency/96/analytics.png", width=80)
-    st.sidebar.title("🎯 Filters & Settings")
+    st.sidebar.title("🎯 Bộ lọc & Cài đặt")
     
     # Navigation
     page = st.sidebar.radio(
-        "📋 Navigation",
-        ["🏠 Overview", "📊 Market Analysis", "🔍 Job Recommendations", "💰 Salary Insights", "🎓 Skills Analysis"],
+        "📋 Điều hướng",
+        ["🏠 Tổng quan", "📊 Phân tích thị trường", "🔍 Gợi ý việc làm", "💰 Phân tích lương", 
+         "🎓 Phân tích kỹ năng", "🎬 Kịch bản Demo", "🚀 Mô phỏng lộ trình", "⚖️ Công cụ so sánh", 
+         "📥 Xuất báo cáo", "🤖 Trợ lý AI"],
         label_visibility="visible"
     )
     
     # Filters
-    with st.sidebar.expander("🔍 Filter Options", expanded=True):
+    with st.sidebar.expander("🔍 Tùy chọn lọc", expanded=True):
         job_groups = ['All'] + sorted(df['job_group'].unique().tolist())
-        selected_job_group = st.selectbox("Job Group", job_groups, key="job_group")
+        selected_job_group = st.selectbox("Nhóm nghề", job_groups, key="job_group")
         
         levels = ['All'] + sorted(df['level'].unique().tolist())
-        selected_level = st.selectbox("Experience Level", levels, key="level")
+        selected_level = st.selectbox("Cấp độ kinh nghiệm", levels, key="level")
         
         cities = ['All'] + sorted(df['city'].unique().tolist())
-        selected_city = st.selectbox("City", cities, key="city")
+        selected_city = st.selectbox("Thành phố", cities, key="city")
     
     # Apply filters
     filtered_df = df.copy()
@@ -280,37 +287,47 @@ def main():
         filtered_df = filtered_df[filtered_df['city'] == selected_city]
     
     # Page routing
-    if page == "🏠 Overview":
+    if page == "🏠 Tổng quan":
         show_overview(df, filtered_df)
-    elif page == "📊 Market Analysis":
+    elif page == "📊 Phân tích thị trường":
         show_market_analysis(filtered_df)
-    elif page == "🔍 Job Recommendations":
+    elif page == "🔍 Gợi ý việc làm":
         show_job_recommendations(df, recommender)
-    elif page == "💰 Salary Insights":
+    elif page == "💰 Phân tích lương":
         show_salary_insights(filtered_df)
-    else:
+    elif page == "🎓 Phân tích kỹ năng":
         show_skills_analysis(filtered_df)
+    elif page == "🎬 Kịch bản Demo":
+        show_demo_scenarios(df, recommender)
+    elif page == "🚀 Mô phỏng lộ trình":
+        show_career_simulator(df)
+    elif page == "⚖️ Công cụ so sánh":
+        show_compare_tool(df)
+    elif page == "📥 Xuất báo cáo":
+        show_export_tools(df)
+    elif page == "🤖 Trợ lý AI":
+        show_chatbot(df)
 
 
 def show_overview(df, filtered_df):
     """Overview page"""
-    st.markdown('<h2 class="sub-header">📊 Market Overview</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sub-header">📊 Tổng quan thị trường</h2>', unsafe_allow_html=True)
     
     # Key metrics
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.markdown(create_metric_card("Total Jobs", f"{len(filtered_df):,}", "💼"), unsafe_allow_html=True)
+        st.markdown(create_metric_card("Tổng số việc", f"{len(filtered_df):,}", "💼"), unsafe_allow_html=True)
     
     with col2:
-        st.markdown(create_metric_card("Companies", f"{filtered_df['company_names'].nunique():,}", "🏢"), unsafe_allow_html=True)
+        st.markdown(create_metric_card("Công ty", f"{filtered_df['company_names'].nunique():,}", "🏢"), unsafe_allow_html=True)
     
     with col3:
         avg_salary = filtered_df['salary_numeric'].mean() / 1_000_000
-        st.markdown(create_metric_card("Avg Salary", f"{avg_salary:.1f}M", "💰"), unsafe_allow_html=True)
+        st.markdown(create_metric_card("Lương TB", f"{avg_salary:.1f}M", "💰"), unsafe_allow_html=True)
     
     with col4:
-        st.markdown(create_metric_card("Cities", f"{filtered_df['city'].nunique()}", "📍"), unsafe_allow_html=True)
+        st.markdown(create_metric_card("Thành phố", f"{filtered_df['city'].nunique()}", "📍"), unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -318,7 +335,7 @@ def show_overview(df, filtered_df):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 🎯 Jobs by Role")
+        st.markdown("### 🎯 Việc theo nhóm nghề")
         job_dist = filtered_df['job_group'].value_counts().head(10)
         fig = px.bar(
             x=job_dist.values, 
@@ -326,13 +343,13 @@ def show_overview(df, filtered_df):
             orientation='h',
             color=job_dist.values,
             color_continuous_scale='Blues',
-            labels={'x': 'Number of Jobs', 'y': 'Job Group'}
+            labels={'x': 'Số lượng việc', 'y': 'Nhóm nghề'}
         )
         fig.update_layout(showlegend=False, height=400)
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        st.markdown("### 📊 Experience Levels")
+        st.markdown("### 📊 Cấp độ kinh nghiệm")
         level_dist = filtered_df['level'].value_counts()
         fig = px.pie(
             values=level_dist.values,
@@ -348,25 +365,25 @@ def show_overview(df, filtered_df):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 📍 Geographic Distribution")
+        st.markdown("### 📍 Phân bố địa lý")
         city_dist = filtered_df['city'].value_counts().head(10)
         fig = px.bar(
             x=city_dist.index,
             y=city_dist.values,
             color=city_dist.values,
             color_continuous_scale='Viridis',
-            labels={'x': 'City', 'y': 'Number of Jobs'}
+            labels={'x': 'Thành phố', 'y': 'Số lượng việc'}
         )
         fig.update_layout(showlegend=False, height=400)
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        st.markdown("### 💰 Salary Distribution")
+        st.markdown("### 💰 Phân bố lương")
         salary_data = filtered_df[filtered_df['salary_numeric'].notna()]['salary_numeric'] / 1_000_000
         fig = px.histogram(
             salary_data,
             nbins=30,
-            labels={'value': 'Salary (Million VND)', 'count': 'Frequency'},
+            labels={'value': 'Lương (triệu VND)', 'count': 'Tần suất'},
             color_discrete_sequence=['#667eea']
         )
         fig.update_layout(showlegend=False, height=400)
@@ -375,10 +392,10 @@ def show_overview(df, filtered_df):
 
 def show_market_analysis(filtered_df):
     """Market analysis page"""
-    st.markdown('<h2 class="sub-header">📊 Market Trends & Analysis</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sub-header">📊 Xu hướng & phân tích thị trường</h2>', unsafe_allow_html=True)
     
     # Salary by job group
-    st.markdown("### 💰 Salary Analysis by Job Group")
+    st.markdown("### 💰 Lương theo nhóm nghề")
     salary_by_group = filtered_df[filtered_df['salary_numeric'].notna()].groupby('job_group').agg({
         'salary_numeric': ['mean', 'median', 'count']
     }).reset_index()
@@ -402,7 +419,7 @@ def show_market_analysis(filtered_df):
     ))
     fig.update_layout(
         barmode='group',
-        xaxis_title="Salary (Million VND)",
+        xaxis_title="Lương (triệu VND)",
         height=500
     )
     st.plotly_chart(fig, use_container_width=True)
@@ -411,20 +428,20 @@ def show_market_analysis(filtered_df):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 📊 Salary by Experience Level")
+        st.markdown("### 📊 Lương theo cấp độ")
         salary_by_level = filtered_df[filtered_df['salary_numeric'].notna()].groupby('level')['salary_numeric'].mean().sort_values(ascending=False)
         fig = px.bar(
             x=salary_by_level.index,
             y=salary_by_level.values / 1_000_000,
             color=salary_by_level.values,
             color_continuous_scale='Blues',
-            labels={'x': 'Level', 'y': 'Avg Salary (M VND)'}
+            labels={'x': 'Cấp độ', 'y': 'Lương TB (triệu VND)'}
         )
         fig.update_layout(showlegend=False, height=400)
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        st.markdown("### 🏢 Top Hiring Companies")
+        st.markdown("### 🏢 Công ty tuyển nhiều")
         top_companies = filtered_df['company_names'].value_counts().head(10)
         fig = px.bar(
             x=top_companies.values,
@@ -432,7 +449,7 @@ def show_market_analysis(filtered_df):
             orientation='h',
             color=top_companies.values,
             color_continuous_scale='Purples',
-            labels={'x': 'Job Postings', 'y': 'Company'}
+            labels={'x': 'Tin tuyển', 'y': 'Công ty'}
         )
         fig.update_layout(showlegend=False, height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -440,16 +457,16 @@ def show_market_analysis(filtered_df):
 
 def show_job_recommendations(df, recommender):
     """Job recommendations page"""
-    st.markdown('<h2 class="sub-header">🔍 AI-Powered Job Recommendations</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sub-header">🔍 Gợi ý việc làm bằng AI</h2>', unsafe_allow_html=True)
     
     if recommender is None:
-        st.error("❌ Recommender system not available")
+        st.error("❌ Hệ thống gợi ý chưa sẵn sàng")
         return
     
     st.markdown("""
     <div class="info-box">
-        💡 <strong>How it works:</strong> Enter your skills and preferences, and our AI will recommend 
-        the best matching jobs based on skill similarity and your criteria.
+        💡 <strong>Cách hoạt động:</strong> Nhập kỹ năng và tiêu chí của bạn, AI sẽ gợi ý 
+        các việc phù hợp nhất dựa trên mức độ tương đồng kỹ năng.
     </div>
     """, unsafe_allow_html=True)
     
@@ -467,16 +484,16 @@ def show_job_recommendations(df, recommender):
                          'kubernetes', 'aws', 'sql', 'mongodb', 'django', 'spring']
         
         user_skills_input = st.multiselect(
-            "🎯 Select Your Skills",
+            "🎯 Chọn kỹ năng của bạn",
             options=sorted(list(all_skills)),
             default=['python', 'django'] if 'python' in all_skills else [],
-            help="Select the skills you have"
+            help="Chọn các kỹ năng bạn đang có"
         )
         
         # Or manual input
         manual_skills = st.text_input(
-            "Or enter skills manually (comma-separated)",
-            placeholder="e.g., python, django, postgresql, docker"
+            "Hoặc nhập kỹ năng thủ công (cách nhau bằng dấu phẩy)",
+            placeholder="vd: python, django, postgresql, docker"
         )
         
         if manual_skills:
@@ -485,19 +502,19 @@ def show_job_recommendations(df, recommender):
             user_skills = user_skills_input
     
     with col2:
-        st.markdown("### ⚙️ Preferences")
-        pref_level = st.selectbox("Experience Level", ['Any'] + sorted(df['level'].unique().tolist()))
-        pref_city = st.selectbox("City", ['Any'] + sorted(df['city'].unique().tolist()))
-        pref_min_salary = st.number_input("Min Salary (Million VND)", min_value=0, value=0, step=5)
-        num_results = st.slider("Number of Results", 5, 20, 10)
+        st.markdown("### ⚙️ Ưu tiên")
+        pref_level = st.selectbox("Cấp độ", ['Any'] + sorted(df['level'].unique().tolist()))
+        pref_city = st.selectbox("Thành phố", ['Any'] + sorted(df['city'].unique().tolist()))
+        pref_min_salary = st.number_input("Lương tối thiểu (triệu VND)", min_value=0, value=0, step=5)
+        num_results = st.slider("Số lượng kết quả", 5, 20, 10)
     
     # Search button
-    if st.button("🔍 Find Jobs", use_container_width=True):
+    if st.button("🔍 Tìm việc phù hợp", use_container_width=True):
         if not user_skills:
-            st.warning("⚠️ Please enter at least one skill")
+            st.warning("⚠️ Vui lòng nhập ít nhất 1 kỹ năng")
             return
         
-        with st.spinner("🤖 AI is analyzing jobs..."):
+        with st.spinner("🤖 AI đang phân tích việc làm..."):
             # Get recommendations
             recommendations = recommender.recommend_by_skills(
                 user_skills=user_skills,
@@ -508,18 +525,18 @@ def show_job_recommendations(df, recommender):
             )
             
             if len(recommendations) == 0:
-                st.warning("😕 No jobs found matching your criteria. Try adjusting your filters.")
+                st.warning("😕 Không tìm thấy việc phù hợp. Hãy điều chỉnh bộ lọc.")
                 return
             
             # Display results
             st.markdown(f"""
             <div class="info-box">
-                ✅ Found <strong>{len(recommendations)}</strong> matching jobs for your profile
+                ✅ Tìm thấy <strong>{len(recommendations)}</strong> việc phù hợp với hồ sơ của bạn
             </div>
             """, unsafe_allow_html=True)
             
             # Show skills summary
-            st.markdown(f"**Your Skills:** {', '.join(user_skills)}")
+            st.markdown(f"**Kỹ năng của bạn:** {', '.join(user_skills)}")
             
             # Display jobs
             for idx, (_, job) in enumerate(recommendations.iterrows(), 1):
@@ -528,19 +545,19 @@ def show_job_recommendations(df, recommender):
 
 def show_salary_insights(filtered_df):
     """Salary insights page"""
-    st.markdown('<h2 class="sub-header">💰 Salary Insights & Calculator</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sub-header">💰 Phân tích lương & ước tính</h2>', unsafe_allow_html=True)
     
     # Salary calculator
-    st.markdown("### 🧮 Salary Estimator")
+    st.markdown("### 🧮 Ước tính lương")
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        calc_job_group = st.selectbox("Job Group", filtered_df['job_group'].unique())
+        calc_job_group = st.selectbox("Nhóm nghề", filtered_df['job_group'].unique())
     with col2:
-        calc_level = st.selectbox("Level", filtered_df['level'].unique())
+        calc_level = st.selectbox("Cấp độ", filtered_df['level'].unique())
     with col3:
-        calc_city = st.selectbox("City", filtered_df['city'].unique())
+        calc_city = st.selectbox("Thành phố", filtered_df['city'].unique())
     
     # Calculate salary range
     calc_df = filtered_df[
@@ -558,13 +575,13 @@ def show_salary_insights(filtered_df):
         
         col1, col2, col3, col4 = st.columns(4)
         with col1:
-            st.metric("📉 Minimum", f"{min_sal:.1f}M")
+            st.metric("📉 Thấp nhất", f"{min_sal:.1f}M")
         with col2:
-            st.metric("📊 Average", f"{avg_sal:.1f}M")
+            st.metric("📊 Trung bình", f"{avg_sal:.1f}M")
         with col3:
-            st.metric("📈 Median", f"{median_sal:.1f}M")
+            st.metric("📈 Trung vị", f"{median_sal:.1f}M")
         with col4:
-            st.metric("🚀 Maximum", f"{max_sal:.1f}M")
+            st.metric("🚀 Cao nhất", f"{max_sal:.1f}M")
         
         # Salary range visualization
         fig = go.Figure()
@@ -575,19 +592,19 @@ def show_salary_insights(filtered_df):
             boxmean='sd'
         ))
         fig.update_layout(
-            yaxis_title="Salary (Million VND)",
+            yaxis_title="Lương (triệu VND)",
             height=300,
             showlegend=False
         )
         st.plotly_chart(fig, use_container_width=True)
     else:
-        st.info("📊 No salary data available for this combination")
+        st.info("📊 Chưa có dữ liệu lương cho lựa chọn này")
     
     # Salary trends
     st.markdown("---")
-    st.markdown("### 📈 Salary Trends by Category")
+    st.markdown("### 📈 Xu hướng lương theo nhóm")
     
-    tab1, tab2, tab3 = st.tabs(["By Job Group", "By Level", "By City"])
+    tab1, tab2, tab3 = st.tabs(["Theo nhóm nghề", "Theo cấp độ", "Theo thành phố"])
     
     with tab1:
         salary_by_group = filtered_df[filtered_df['salary_numeric'].notna()].groupby('job_group')['salary_numeric'].agg(['mean', 'median', 'count'])
@@ -600,10 +617,10 @@ def show_salary_insights(filtered_df):
             orientation='h',
             color='mean',
             color_continuous_scale='Blues',
-            labels={'mean': 'Avg Salary (VND)', 'index': 'Job Group'}
+            labels={'mean': 'Lương TB (VND)', 'index': 'Nhóm nghề'}
         )
         fig.update_traces(x=salary_by_group['mean'] / 1_000_000)
-        fig.update_layout(xaxis_title="Average Salary (Million VND)", height=500)
+        fig.update_layout(xaxis_title="Lương TB (triệu VND)", height=500)
         st.plotly_chart(fig, use_container_width=True)
     
     with tab2:
@@ -613,7 +630,7 @@ def show_salary_insights(filtered_df):
             y=salary_by_level.values / 1_000_000,
             color=salary_by_level.values,
             color_continuous_scale='Purples',
-            labels={'x': 'Level', 'y': 'Avg Salary (M VND)'}
+            labels={'x': 'Cấp độ', 'y': 'Lương TB (triệu VND)'}
         )
         fig.update_layout(showlegend=False, height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -625,7 +642,7 @@ def show_salary_insights(filtered_df):
             y=salary_by_city.values / 1_000_000,
             color=salary_by_city.values,
             color_continuous_scale='Greens',
-            labels={'x': 'City', 'y': 'Avg Salary (M VND)'}
+            labels={'x': 'Thành phố', 'y': 'Lương TB (triệu VND)'}
         )
         fig.update_layout(showlegend=False, height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -633,7 +650,7 @@ def show_salary_insights(filtered_df):
 
 def show_skills_analysis(filtered_df):
     """Skills analysis page"""
-    st.markdown('<h2 class="sub-header">🎓 Skills Analysis</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sub-header">🎓 Phân tích kỹ năng</h2>', unsafe_allow_html=True)
     
     # Extract all skills
     all_skills = []
@@ -647,7 +664,7 @@ def show_skills_analysis(filtered_df):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 🏆 Most In-Demand Skills")
+        st.markdown("### 🏆 Kỹ năng được tuyển nhiều")
         top_20 = skill_counts.head(20)
         fig = px.bar(
             x=top_20.values,
@@ -655,19 +672,19 @@ def show_skills_analysis(filtered_df):
             orientation='h',
             color=top_20.values,
             color_continuous_scale='Blues',
-            labels={'x': 'Job Postings', 'y': 'Skill'}
+            labels={'x': 'Tin tuyển', 'y': 'Kỹ năng'}
         )
         fig.update_layout(showlegend=False, height=600)
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        st.markdown("### 📊 Skill Categories")
+        st.markdown("### 📊 Nhóm kỹ năng")
         
         # Categorize skills (simplified)
         categories = {
-            'Programming Languages': ['python', 'java', 'javascript', 'c++', 'c#', 'php', 'ruby', 'go', 'swift'],
-            'Frameworks': ['react', 'angular', 'vue', 'django', 'spring', 'nodejs', 'laravel', 'flutter'],
-            'Databases': ['sql', 'mysql', 'postgresql', 'mongodb', 'redis', 'oracle', 'elasticsearch'],
+            'Ngôn ngữ lập trình': ['python', 'java', 'javascript', 'c++', 'c#', 'php', 'ruby', 'go', 'swift'],
+            'Framework': ['react', 'angular', 'vue', 'django', 'spring', 'nodejs', 'laravel', 'flutter'],
+            'Cơ sở dữ liệu': ['sql', 'mysql', 'postgresql', 'mongodb', 'redis', 'oracle', 'elasticsearch'],
             'Cloud & DevOps': ['aws', 'azure', 'gcp', 'docker', 'kubernetes', 'jenkins', 'terraform', 'ansible'],
             'Data & AI': ['machine learning', 'deep learning', 'tensorflow', 'pytorch', 'data analysis', 'pandas', 'numpy']
         }
@@ -688,7 +705,7 @@ def show_skills_analysis(filtered_df):
         st.plotly_chart(fig, use_container_width=True)
         
         # Trending skills
-        st.markdown("### 🔥 Trending Skills")
+        st.markdown("### 🔥 Kỹ năng nổi bật")
         trending = skill_counts.head(15)
         for skill, count in trending.items():
             percentage = (count / len(filtered_df)) * 100
@@ -704,9 +721,9 @@ def show_skills_analysis(filtered_df):
     
     # Skill combinations
     st.markdown("---")
-    st.markdown("### 🔗 Popular Skill Combinations")
+    st.markdown("### 🔗 Tổ hợp kỹ năng phổ biến")
     
-    st.info("💡 Skills that frequently appear together in job postings")
+    st.info("💡 Các kỹ năng thường xuất hiện cùng nhau trong tin tuyển dụng")
     
     # Find common pairs (simplified)
     from itertools import combinations
@@ -720,7 +737,7 @@ def show_skills_analysis(filtered_df):
     pair_counts = pd.Series(pairs).value_counts().head(15)
     
     pair_df = pd.DataFrame([
-        {'Skill 1': pair[0].capitalize(), 'Skill 2': pair[1].capitalize(), 'Count': count}
+        {'Kỹ năng 1': pair[0].capitalize(), 'Kỹ năng 2': pair[1].capitalize(), 'Số lượng': count}
         for pair, count in pair_counts.items()
     ])
     
