@@ -165,16 +165,30 @@ RETURN ONLY THE JSON ARRAY, NO EXPLANATION."""
             
             result = response.choices[0].message.content
             logger.info("✅ Groq đã trả về kết quả!")
-            logger.info(f"📝 Response preview: {result[:300]}...")
+            logger.info(f"📝 Response length: {len(result)} chars")
             
-            # Parse JSON
+            # Parse JSON with better error handling
             try:
-                json_start = result.find('[')
-                json_end = result.rfind(']') + 1
-                
-                if json_start != -1 and json_end > json_start:
-                    json_str = result[json_start:json_end]
-                    jobs = json.loads(json_str)
+                # Try direct parse first
+                jobs = json.loads(result)
+            except json.JSONDecodeError:
+                # Fallback: extract JSON array
+                try:
+                    json_start = result.find('[')
+                    json_end = result.rfind(']') + 1
+                    
+                    if json_start != -1 and json_end > json_start:
+                        json_str = result[json_start:json_end]
+                        jobs = json.loads(json_str)
+                    else:
+                        logger.error("❌ Không tìm thấy JSON")
+                        logger.info(f"Response: {result[:500]}")
+                        return []
+                except Exception as e:
+                    logger.error(f"❌ Parse error: {e}")
+                    return []
+            
+            if isinstance(jobs, list) and len(jobs) > 0:
                     
                     # Add metadata
                     for job in jobs:

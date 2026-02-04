@@ -4,10 +4,10 @@
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.29+-red.svg)](https://streamlit.io)
-[![AI](https://img.shields.io/badge/AI-GPT--4%20Browser--Use-brightgreen.svg)](https://platform.openai.com)
-[![Data](https://img.shields.io/badge/Jobs-1,422-orange.svg)](data_clean/clean_data.csv)
+[![AI](https://img.shields.io/badge/AI-Groq%20Llama%203.3-brightgreen.svg)](https://console.groq.com)
+[![Data](https://img.shields.io/badge/Jobs-1,436+-orange.svg)](data_clean/clean_data.csv)
 
-Dashboard phân tích thị trường tuyển dụng IT với **AI-powered crawler** (GPT-4 + Browser Use), **10 trang tương tác**, ML recommendations, career simulator. Sử dụng dữ liệu thực từ ITViec.vn.
+Dashboard phân tích thị trường tuyển dụng IT với **AI-powered crawler** (Groq Llama 3.3 - FREE), **10 trang tương tác**, ML recommendations, career simulator. Dữ liệu thực từ ITViec + VietnamWorks.
 
 ---
 
@@ -19,24 +19,42 @@ streamlit run src/visualization/dashboard_v2.py
 ```
 🌐 Mở: **http://localhost:8501** - Dashboard với 1,422 jobs sẵn có
 
-### Option 2: Crawl thêm data với AI → Dashboard
+### Option 2: Crawl thêm data THẬT với AI (FREE) → Dashboard
 ```bash
-# 1. Crawl thêm 100-200 jobs mới (AI mock)
-python src/crawler/ITViec_AI_demo.py --jobs 100
+# 1. Crawl THẬT từ ITViec/VietnamWorks (Groq AI - Miễn phí)
+python src/crawler/ITViec_AI_groq.py --jobs 20
+python src/crawler/VietnamWorks_AI_groq.py --jobs 20
 
 # 2. Chạy dashboard
 streamlit run src/visualization/dashboard_v2.py
 ```
 
-**💡 Tips:** `--jobs 50` (nhanh) | `--jobs 100` (cân bằng) | `--jobs 200` (nhiều data)
+### Option 3: Mock AI Crawler (Không cần API)
+```bash
+# Crawl mock data (fake realistic jobs)
+python src/crawler/ITViec_AI_demo.py --jobs 100
 
+# Chạy dashboard
+streamlit run src/visualization/dashboard_v2.py
+```src/crawler/README_AI_CRAWLERS.md](src/crawler/README_AI_CRAWLERS.md)** | 🤖 Hướng dẫn AI crawlers | **Setup crawlers** |
+| **[LOGIC_EXPLANATION.md](LOGIC_EXPLANATION.md)** | ⭐ Giải thích logic, vấn đáp | **Chuẩn bị thuyết trình** |
+| [QUICK_START.md](QUICK_START.md) | Hướng dẫn demo đầy đủ | Demo cho thầy |
+| [COMMANDS.md](COMMANDS.md) | Quick reference lệnh | Troubleshooti
 ---
 
 ## 📚 Tài Liệu Quan Trọng
 
-| File | Mục đích | Khi nào đọc |
-|------|----------|-------------|
-| **[LOGIC_EXPLANATION.md](LOGIC_EXPLANATION.md)** | ⭐ Giải thích logic, vấn đáp | **Chuẩn bị thuyết trình** |
+| Fi🚀 Groq AI Crawlers** (REAL - FREE) ⭐ MỚI!
+  - ✅ ITViec + VietnamWorks crawlers
+  - 🤖 Llama 3.3 70B qua Groq API (miễn phí)
+  - ⚡ Nhanh (1-2 phút), nhẹ (không download model)
+  - 🏢 Companies THẬT: VNG, FPT, Tiki, Shopee, SmartOSC...
+  - 🔄 Auto-merge vào clean_data.csv
+  - 📖 [Chi tiết](src/crawler/README_AI_CRAWLERS.md)
+
+- **🎭 AI Mock Crawler** (Demo - Không cần API)
+  - ✨ Mock realistic data cho demo
+  - 🏢 50+ công ty nổi tiếngích logic, vấn đáp | **Chuẩn bị thuyết trình** |
 | [QUICK_START.md](QUICK_START.md) | Hướng dẫn demo đầy đủ | Demo cho thầy |
 | [COMMANDS.md](COMMANDS.md) | Quick reference lệnh | Troubleshooting |
 | [START_HERE.md](START_HERE.md) | Bắt đầu nhanh | Lần đầu sử dụng |

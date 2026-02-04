@@ -76,16 +76,17 @@ async def crawl_vietnamworks(num_jobs=20):
             page = await context.new_page()
             
             logger.info("📡 Đang vào VietnamWorks.com...")
-            await page.goto("https://www.vietnamworks.com/it-software-jobs-i35-en", wait_until='domcontentloaded')
+            await page.goto("https://www.vietnamworks.com/it-software-jobs-i35-en", wait_until='domcontentloaded', timeout=30000)
             
-            logger.info("⏳ Đợi jobs load (5s)...")
-            await page.wait_for_timeout(5000)
+            logger.info("⏳ Đợi jobs load (3s)...")
+            await page.wait_for_timeout(3000)
             
-            # Scroll to load more
+            # Scroll to load more với progress
             logger.info("📜 Đang scroll để load jobs...")
             for i in range(3):
                 await page.evaluate(f"window.scrollTo(0, {(i+1) * 800})")
-                await page.wait_for_timeout(1000)
+                logger.info(f"   Scroll {i+1}/3...")
+                await page.wait_for_timeout(800)
             
             logger.info("📸 Đang lấy HTML content...")
             content = await page.content()
@@ -107,16 +108,16 @@ async def crawl_vietnamworks(num_jobs=20):
             logger.info("🧠 Đang gửi HTML cho Groq AI...")
             logger.info("⏱️ Đợi ~20 giây...\n")
             
-            prompt = f"""Extract {num_jobs} IT jobs from this VietnamWorks HTML.
+            prompt = f"""You are an expert web scraper. Extract EXACTLY {num_jobs} IT jobs from this VietnamWorks HTML.
 
-Look for job cards/listings with:
-- Job titles (usually in <h2>, <h3>, or class with "job-title")
-- Company names (class with "company")
-- Salary/wage information
-- Location/city
-- Tech skills, programming languages
+FIND job cards/listings that contain:
+- Job titles: Backend, Frontend, DevOps, Data, QA, etc
+- Company names: Look for company/employer fields
+- Salary: Numbers with $ or VND, or "Negotiable"/"Thoả thuận"
+- Location: Cities like "Ho Chi Minh", "Ha Noi", "Da Nang"
+- Skills: Technologies like Python, Java, React, AWS
 
-For EACH job found, extract these fields:
+EXTRACT these fields for EACH job:
 - job_title: The position name
 - company_name: Hiring company
 - salary: Salary info or "Negotiable" if not shown
