@@ -1,104 +1,109 @@
-<div align="center">
+# 🇻🇳 Phân tích thị trường việc làm IT Việt Nam
 
-# 🇻🇳 Vietnam IT Job Market Analysis
+### 🤖 AI-Powered Web Crawler + Interactive Dashboard
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.29+-red.svg)](https://streamlit.io)
+[![AI](https://img.shields.io/badge/AI-GPT--4%20Browser--Use-brightgreen.svg)](https://platform.openai.com)
 [![Data](https://img.shields.io/badge/Jobs-1,141-orange.svg)](data_clean/clean_data.csv)
 
-Dashboard phân tích 1,141 jobs IT từ ITViec với AI recommendations, career simulator, và 10 trang tương tác.
-
-</div>
+Dashboard phân tích thị trường tuyển dụng IT với **AI-powered crawler** (GPT-4 + Browser Use), **10 trang tương tác**, ML recommendations, career simulator. Sử dụng dữ liệu thực từ ITViec.vn.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Chạy nhanh (3 bước)
 
+### Option 1: Dashboard Only (No API Key Needed)
 ```bash
-# Clone & setup
-git clone https://github.com/luca13224/IT_job_analysis.git
-cd IT_job_analysis
-python -m venv .venv
-.venv\Scripts\activate  # Windows
+# 1. Cài đặt dependencies
 pip install -r requirements.txt
 
-# Run dashboard
+# 2. Chạy dashboard với dữ liệu có sẵn
 streamlit run src/visualization/dashboard_v2.py
-# → Open http://localhost:8501
+
+# 3. Mở trình duyệt tại: http://localhost:8501
 ```
 
-## ✨ Features
+### Option 2: AI Crawler Demo (Requires OpenAI API)
+```bash
+# 1. Setup API key
+cp .env.example .env
+# Edit .env và thêm: OPENAI_API_KEY=sk-your-key-here
 
-**10 Dashboard Pages:**
-1. 🏠 Overview - Market metrics
-2. 📊 Market Analysis - Job distribution
-3. 🔍 Job Recommendations - AI matching (TF-IDF + Cosine Similarity)
-4. 💰 Salary Insights - Salary analysis by role
-5. 🎓 Skills Analysis - Top skills & trends
-6. 🎬 Demo Scenarios - 5 pre-built personas
-7. 🚀 Career Simulator - 5-10 year salary projection
-8. ⚖️ Compare Tool - Jobs/Cities/Companies comparison
-9. 📥 Export Tools - Excel/CSV/JSON reports
-10. 🤖 AI Chatbot - Q&A assistant
+# 2. Chạy AI crawler
+python src/crawler/ITViec_AI_crawler.py
+# → GPT-4 tự động crawl jobs thông minh!
 
-**Data Sources:** ITViec (1,141 jobs), TopCV crawler
+# 3. Xem so sánh AI vs Traditional crawler
+```
+
+💡 **Demo nhanh:** Dùng Option 1 với data có sẵn. Option 2 để thấy sức mạnh AI!
+
+## ✨ Tính năng chính
+
+### 🤖 AI-Powered Crawlers (NEW!)
+- **GPT-4 Intelligent Crawler** - Browser Use + LangChain
+  - ✨ Natural language task: "Go to ITViec, extract Backend jobs"
+  - 🔄 Self-adaptive to layout changes (no CSS selectors!)
+  - 🧠 AI understands page context
+  - 📊 Built-in comparison with traditional crawler
+- **Traditional Selenium Crawler** - Fast, free, stable backup
+
+### 📊 Dashboard 10 trang
+1. **🏠 Tổng quan** - Metrics tổng quan thị trường
+2. **📊 Phân tích thị trường** - Phân bố jobs theo nhóm nghề/cấp độ/thành phố
+3. **🔍 Gợi ý việc làm** - AI matching dựa trên kỹ năng (TF-IDF + Cosine Similarity)
+4. **💰 Phân tích lương** - Phân tích chi tiết mức lương theo vị trí
+5. **🎓 Phân tích kỹ năng** - Top skills, skill combinations, trends
+6. **🎬 Kịch bản Demo** - 5 pre-built scenarios cho presentation
+7. **🚀 Mô phỏng lộ trình** - Career path 5-10 năm với salary projection
+8. **⚖️ Công cụ so sánh** - So sánh jobs/cities/companies
+9. **📥 Xuất báo cáo** - Export Excel/CSV/JSON + generate reports
+10. **🤖 Trợ lý AI** - Chatbot Q&A về thị trường IT
+AI Crawling:** Browser Use, LangChain, GPT-4 ⚡ NEW!
+- **Traditional
+### 🎯 Data Sources
+- **ITViec.vn** - 1,141 jobs crawled
+- **TopCV.vn** - Multi-page crawler
 
 
 ## 🛠 Tech Stack
 
 - **Web Crawling:** Selenium, BeautifulSoup4
 - **Data:** Pandas, NumPy
-**Crawling:** Selenium, BeautifulSoup | **Data:** Pandas, NumPy | **ML/NLP:** Scikit-learn, NLTK, spaCy | **Viz:** Streamlit, Plotly
+- **NLP:** NLTK, spaCy, Underthesea (Vietnamese)
+- **ML:** Scikit-learn (TF-IDF, Cosine Similarity)
+- **Visualization:** Plotly, Streamlit
+- **UI/UX:** Custom CSS với gradient theme (Purple/Blue)
 
-## 🔄 Data Pipeline
-
-```
-Crawling → Processing → Analysis → Dashboard
-1,141 jobs  → Clean data → ML/NLP → 10 pages
-```
-
-**Pipeline gồm 7 modules:**
-
-1. **Web Crawling**: Selenium auto-scroll ITViec, extract job details, incremental save CSV
-2. **Data Processing**: Normalize salary (USD→VND), parse skills, categorize jobs, standardize locations
-3. **ML Recommendations**: TF-IDF vectorization + Cosine Similarity → Match user skills với jobs (0-100%)
-4. **NLP Analysis**: Skill frequency, co-occurrence patterns, recommendations
-5. **Dashboard**: 10 Streamlit pages với caching, filters, real-time charts
-6. **Career Simulator**: Fresher→Junior→Mid→Senior progression với salary projection (5-10 years)
-7. **AI Chatbot**: Intent detection (salary/skills/career queries) + entity extraction + data-driven responses
-
-**Performance:** Load 2-3s | TF-IDF 0.5s | Recommendations <1s | Memory 50MB
+## 📁 Cấu trúc Project
 
 ```
-IT-job-analysis-VN-main/
-├── .streamlit/                    # Streamlit configuration
-│   └── config.toml               # Server & UI settings
-├── config/                        # Application config
-├── data_clean/                    # ✅ Processed data (ready to use)
-│   └── clean_data.csv            # 1,141 IT jobs from ITViec
-├── data_raw/                      # Raw scraped data
+IT-joenv.example           # 🔐 API key config template
+├── .streamlit/              # Streamlit config
+├── data_clean/             # Dữ liệu đã xử lý
+│   └── clean_data.csv      # 1,141 jobs
 ├── src/
-│   ├── crawler/                  # Web scraping modules
-│   │   ├── ITViec_crawling.py   # ITViec scraper
-│   │   └── topcv_crawling.py    # TopCV scraper
-│   ├── ml_models/                # AI/ML models
-│   │   └── job_recommender.py   # TF-IDF + Cosine Similarity
-│   └── visualization/            # 📊 Dashboard modules (10 pages)
-│       ├── dashboard_v2.py       # 🏠 Main entry point
-│       ├── demo_scenarios.py     # 🎬 5 pre-built demos
-│       ├── career_simulator.py   # 🚀 Career path projection
-│       ├── compare_tool.py       # ⚖️ Job/City/Company comparison
-│       ├── export_tools.py       # 📥 Excel/CSV/JSON export
-│       ├── chatbot.py            # 🤖 AI Q&A assistant
-│       └── animations.py         # 🎨 UI animations
-├── notebooks/                     # Jupyter analysis
-│   └── eda.ipynb                 # Exploratory Data Analysis
-├── requirements.txt               # Python dependencies
-├── run_dashboard_v2.bat          # 🚀 Quick launch script (Windows)
-└── README.md                     # 📖 This file
+│   ├── crawler/           # Web crawlers
+│   │   ├── ITViec_AI_crawler.py  # 🤖 AI-powered (NEW!)
+│   │   ├── ITViec_crawling.py    # Traditional Selenium
+│   │   └── topcv_crawling.py     # TopCV crawler
+│   ├── ml_models/         # AI models
+│   │   └── job_recommender.py    # TF-IDF matching
+│   └── visualization/     # Dashboard modules (10 pages)
+│       ├── dashboard_v2.py       # Main dashboard
+│       ├── career_simulator.py   # Career path
+│       ├── compare_tool.py       # Comparison tool
+│       ├── export_tools.py       # Export reports
+│       └── chatbot.py            # AI assistant
+└── requirements.txt       # Dependencies
 ```
 
-> **💡 Tip:** Dữ liệu đã được xử lý sẵn tại `data_clean/clean_data.csv`. Bạn không cần chạy crawler để demo!
+**💡 Key Files:**
+- `ITViec_AI_crawler.py` - AI-powered crawler với Browser Use
+- `ITViec_crawling.py` - Traditional Selenium (backup)
+- `.env.example` - Template cho OpenAI API key run_dashboard_v2.bat  # Quick launch
+```
 
 
 ## 📊 Insights chính
@@ -186,113 +191,74 @@ git push origin main
 
 ## 🐛 Troubleshooting
 
-<details>
-<summary><b>Dashboard không chạy được</b></summary>
-
+### Lỗi crawling
 ```bash
-# Cài lại dependencies
-pip install --upgrade streamlit pandas plotly
-
-# Kiểm tra Python version (cần >= 3.11)
-python --version
+# Cài lại webdriver-manager
+pip install --upgrade webdriver-manager
 ```
-</details>
 
-<details>
-<summary><b>Lỗi "ERR_ADDRESS_INVALID" khi mở browser</b></summary>
-
-⚠️ **Không dùng** `http://0.0.0.0:8501`
-
-✅ **Dùng:** `http://localhost:8501` hoặc `http://127.0.0.1:8501`
-</details>
-
-<details>
-<summary><b>Thiếu file data</b></summary>
-
-Dữ liệu đã có sẵn tại `data_clean/clean_data.csv` (1,141 jobs). Không cần chạy crawler!
-</details>
-
-<details>
-<summary><b>Lỗi import module</b></summary>
-
+### Lỗi encoding
 ```bash
-# Đảm bảo chạy từ thư mục gốc
-cd IT_job_analysis
-
-# Kiểm tra cấu trúc thư mục
-ls src/visualization/dashboard_v2.py
-```
-</details>
-
-<details>
-<summary><b>Port 8501 đã bị chiếm</b></summary>
-
-```bash
-# Dùng port khác
-streamlit run src/visualization/dashboard_v2.py --server.port 8502
-```
-</details>
-
-<details>
-<summary><b>Lỗi encoding khi đọc CSV</b></summary>
-
-```python
-# Thêm encoding UTF-8
+# Đọc file với encoding UTF-8
 df = pd.read_csv('data.csv', encoding='utf-8-sig')
 ```
-</details>
+
+### Lỗi dependencies
+```bash
+# Cài lại tất cả dependencies
+pip install -r requirements.txt --force-reinstall
+```
 
 ## 📚 Tài Liệu Tham Khảo
 
 - [Pandas Documentation](https://pandas.pydata.org/docs/)
 - [Scikit-learn Documentation](https://scikit-learn.org/)
 - [Streamlit Documentation](https://docs.streamlit.io/)
-- [Plotly Documentation](https://plotly.com/python/)
+- [XGBoost Documentation](https://xgboost.readthedocs.io/)
 
 ## 👥 Đóng Góp
 
-Contributions are welcome! Vui lòng:
-
+Mọi đóng góp đều được hoan nghênh! Vui lòng:
 1. Fork repository
-2. Create feature branch: `git checkout -b feature/AmazingFeature`
-3. Commit changes: `git commit -m 'Add AmazingFeature'`
-4. Push to branch: `git push origin feature/AmazingFeature`
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 📧 Contact
+
+Nếu có câu hỏi, vui lòng mở Issue trên GitHub.
+
+---
+
+**Made with ❤️ by Vietnam IT Job Market Analysis Team**```bash
+# Dashboard không chạy
+pip install --upgrade streamlit pandas plotly
+
+# Thiếu data
+# → Dữ liệu có sẵn tại data_clean/clean_data.csv
+
+# Lỗi import module
+# → Đảm bảo chạy từ thư mục gốc: IT-job-analysis-VN-main/
+
+# Port 8501 bị chiếm
+streamlit run src/visualization/dashboard_v2.py --server.port 8502
+```
 
 ## 📝 License
 
 MIT License - Xem [LICENSE](LICENSE) để biết thêm chi tiết.
 
-## 🙏 Project Structure
+## 🙏 Acknowledgments
 
-```
-├── data_clean/clean_data.csv    # 1,141 jobs (ready to use)
-├── src/
-│   ├── crawler/                 # ITViec & TopCV scrapers
-│   ├── ml_models/               # TF-IDF recommender
-│   └── visualization/           # 10 dashboard pages
-│       ├── dashboard_v2.py      # Main entry
-│       ├── career_simulator.py
-│       ├── compare_tool.py
-│       ├── export_tools.py
-│       └── chatbot.py
-└── requirements.txt
-```Key Insights
+- Dữ liệu từ [ITViec.vn](https://itviec.com)
+- Built with [Streamlit](https://streamlit.io)
+- Icons from [Icons8](https://icons8.com)
 
-- **1,141 jobs** từ ITViec | **15+ job groups** | Lương avg: 20-40M VND
-- **Top roles:** Backend, Frontend, Fullstack, Data/AI, Mobile
-- **Top skills:** JavaScript/TS, Python, React/Vue, Docker, AWS
-- **Salary ranges:** Backend Senior 30-50M | Data/AI 35-60M | Frontend Mid 20-35M
+---
 
-## 🎬 Demo Tips
-
-**5 Pre-built Scenarios:** Fresh Graduate | Dev 2 years exp | HR | Recruiter | Learner
-
-**Suggested Demo Flow (15 mins):**
-1. Overview (2m) → 2. Market Analysis (3m) → 3. Career Simulator (4m) → 4. Compare (3m) → 5. AI Chatbot (3m)
-
-## 📝 License & Contact
-
-MIT License | Data from [ITViec.vn](https://itviec.com) | Built with [Streamlit](https://streamlit.io)
-
-⭐ [Star on GitHub](https://github.com/luca13224/IT_job_analysis) | 🐛 [Report Issues](https://github.com/luca13224/IT_job_analysis/issues)
+**⭐ Star repo nếu project hữu ích!**
