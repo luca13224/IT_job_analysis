@@ -11,49 +11,33 @@ Dashboard phân tích thị trường tuyển dụng IT với **AI-powered crawl
 
 ---
 
-## 🚀 Chạy nhanh (1 lệnh)
+## ⚡ Chạy nhanh (1 lệnh)
 
-### ⚡ Demo Dashboard (Khuyên dùng - Không cần API)
+### Option 1: Dashboard Only (Khuyên dùng)
 ```bash
-# Chạy dashboard với 1,141 jobs có sẵn
 streamlit run src/visualization/dashboard_v2.py
 ```
-🌐 Mở trình duyệt: **http://localhost:8501**
+🌐 Mở: **http://localhost:8501** - Dashboard với 1,150 jobs
+
+### Option 2: Full Demo (AI Crawler + Dashboard)
+```bash
+# 1. Demo AI crawler (tự động merge data)
+python src/crawler/ITViec_AI_demo.py
+
+# 2. Chạy dashboard
+streamlit run src/visualization/dashboard_v2.py
+```
 
 ---
 
-### 🤖 Demo AI Crawler (Mock - Không cần API)
-```bash
-# Demo AI crawling concept
-python src/crawler/ITViec_AI_demo.py
+## 📚 Tài Liệu Quan Trọng
 
-# Sau đó chạy dashboard
-streamlit run src/visualization/dashboard_v2.py
-```
-
-📚 **Xem hướng dẫn chi tiết:** [QUICK_START.md](QUICK_START.md) - Toàn bộ flow từ crawl đến dashboard
-
----
-
-### 📋 Lệnh đầy đủ cho Demo/Thuyết trình
-
-```bash
-# Bước 1: Kích hoạt môi trường
-.venv\Scripts\activate  # Windows
-source .venv/bin/activate  # Mac/Linux
-
-# Bước 2: Demo AI Crawler (tùy chọn)
-python src/crawler/ITViec_AI_demo.py
-
-# Bước 3: Chạy Dashboard
-streamlit run src/visualization/dashboard_v2.py
-```
-
-💡 **Tip:** Xem [QUICK_START.md](QUICK_START.md) để có:
-- ✅ Kịch bản demo đầy đủ cho thầy
-- ✅ Troubleshooting
-- ✅ Batch script tự động
-- ✅ Checklist chuẩn bị
+| File | Mục đích | Khi nào đọc |
+|------|----------|-------------|
+| **[LOGIC_EXPLANATION.md](LOGIC_EXPLANATION.md)** | ⭐ Giải thích logic, vấn đáp | **Chuẩn bị thuyết trình** |
+| [QUICK_START.md](QUICK_START.md) | Hướng dẫn demo đầy đủ | Demo cho thầy |
+| [COMMANDS.md](COMMANDS.md) | Quick reference lệnh | Troubleshooting |
+| [START_HERE.md](START_HERE.md) | Bắt đầu nhanh | Lần đầu sử dụng |
 
 ## ✨ Tính năng chính
 
@@ -106,36 +90,41 @@ AI Crawling:** Browser Use, LangChain, GPT-4 ⚡ NEW!
 
 ```
 IT-job-analysis-VN-main/
-├── QUICK_START.md          # 📚 Hướng dẫn demo đầy đủ (MỚI)
-├── .env.example           # 🔐 API key config template
-├── .streamlit/              # Streamlit config
-├── data_clean/             # Dữ liệu đã xử lý
-│   └── clean_data.csv      # 1,141 jobs (SẴN DÙNG)
+├── 📚 LOGIC_EXPLANATION.md  # ⭐ ĐỌC ĐỂ VẤN ĐÁP/THUYẾT TRÌNH
+├── 📋 QUICK_START.md          # Hướng dẫn demo đầy đủ
+├── ⚡ COMMANDS.md             # Quick reference lệnh
+├── 🎯 START_HERE.md           # Bắt đầu nhanh
+├── 📊 DEMO_SUMMARY.md         # Tổng kết project
+│
+├── data_clean/
+│   └── clean_data.csv         # 1,150 jobs (sẵn dùng)
 ├── data_raw/
-│   ├── ITViec_data.csv     # Data gốc Selenium
-│   └── ITViec_AI_demo.csv  # Data từ AI demo (MỚI)
+│   ├── ITViec_data.csv        # Data từ Selenium (1,141)
+│   └── ITViec_AI_demo.csv     # Data từ AI (10)
+│
 ├── src/
-│   ├── crawler/           # Web crawlers
-│   │   ├── ITViec_AI_demo.py     # 🤖 AI Demo (MỚI - Khuyên dùng)
-│   │   ├── ITViec_AI_crawler.py  # AI Real (cần API key)
-│   │   ├── ITViec_crawling.py    # Traditional Selenium
-│   │   └── topcv_crawling.py     # TopCV crawler
-│   ├── ml_models/         # AI models
-│   │   └── job_recommender.py    # TF-IDF matching
-│   └── visualization/     # Dashboard modules (10 pages)
-│       ├── dashboard_v2.py       # 🎯 Main Dashboard
-│       ├── career_simulator.py   # Career path
-│       ├── compare_tool.py       # Comparison tool
-│       ├── export_tools.py       # Export reports
-│       └── chatbot.py            # AI assistant
-└── requirements.txt       # Dependencies
+│   ├── crawler/
+│   │   ├── ITViec_AI_demo.py      # 🤖 AI Crawler (CHÍNH - All-in-one)
+│   │   ├── ITViec_crawling.py     # Traditional Selenium (backup)
+│   │   └── topcv_crawling.py      # TopCV crawler
+│   │
+│   ├── ml_models/
+│   │   └── job_recommender.py     # TF-IDF + Cosine Similarity
+│   │
+│   ├── visualization/
+│   │   └── dashboard_v2.py        # 🎯 Main Dashboard (10 trang)
+│   │
+│   └── data_processing/
+│       └── processor.py           # Data cleaning pipeline
+│
+└── requirements.txt               # Dependencies
 ```
 
 **💡 Files quan trọng:**
-- `QUICK_START.md` - **Hướng dẫn demo đầy đủ cho thuyết trình** (MỚI)
-- `ITViec_AI_demo.py` - AI crawler mock (không cần API)
-- `dashboard_v2.py` - Dashboard chính với 10 trang
-- `clean_data.csv` - 1,141 jobs sẵn dùng
+- **LOGIC_EXPLANATION.md** - ⭐ Giải thích logic cho vấn đáp/thuyết trình
+- **ITViec_AI_demo.py** - AI crawler + auto merge (All-in-one)
+- **dashboard_v2.py** - Dashboard chính
+- **clean_data.csv** - 1,150 jobs sẵn dùng
 
 
 ## 📊 Insights chính

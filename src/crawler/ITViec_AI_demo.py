@@ -6,6 +6,13 @@ Perfect for presentation and understanding the approach
 
 Author: Demo AI Crawler
 Date: 2026
+
+🚀 CÁCH SỬ DỤNG:
+    python src/crawler/ITViec_AI_demo.py
+    
+💾 OUTPUT:
+    - data_raw/ITViec_AI_demo.csv (10 jobs mẫu)
+    - Tự động gộp vào data_clean/clean_data.csv
 """
 
 import pandas as pd
@@ -13,6 +20,15 @@ from datetime import datetime
 import time
 import random
 import logging
+import re
+from pathlib import Path
+import sys
+import io
+
+# Fix Windows encoding
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
@@ -184,6 +200,75 @@ result = agent.run()  # AI làm tất cả! ✨
         print("\n" + "="*70)
         print("💡 Cách tiếp cận AI ngắn gọn hơn 3 lần và tự sửa lỗi!")
         print("="*70 + "\n")
+    
+    def auto_merge_to_main_data(self):
+        """Tự động gộp data AI vào data chính"""
+        try:
+            project_root = Path(__file__).parent.parent.parent
+            ai_file = project_root / "data_raw" / "ITViec_AI_demo.csv"
+            main_file = project_root / "data_clean" / "clean_data.csv"
+            
+            if not ai_file.exists():
+                logger.info("⚠️ Chưa có file AI data để merge")
+                return
+            
+            logger.info("\n🔄 Tự động gộp data AI vào data chính...")
+            
+            # Load AI data
+            df_ai = pd.read_csv(ai_file)
+            
+            # Process to standard format
+            df_ai_processed = pd.DataFrame()
+            df_ai_processed['job_names'] = df_ai['job_title']
+            df_ai_processed['company_names'] = df_ai['company_name']
+            df_ai_processed['salaries'] = df_ai['salary']
+            df_ai_processed['position_names'] = df_ai['job_title']
+            df_ai_processed['kind_jobs'] = 'At office'
+            df_ai_processed['array_skills'] = df_ai['skills']
+            df_ai_processed['locate_names'] = df_ai['city']
+            df_ai_processed['exp_skills'] = df_ai['description']
+            df_ai_processed['domain_arr'] = '[]'
+            df_ai_processed['post_dates_formatted'] = df_ai['crawled_at']
+            
+            # Extract salary numeric
+            def extract_salary(s):
+                if pd.isna(s) or s == 'Negotiable':
+                    return None
+                nums = re.findall(r'(\d+)', str(s))
+                if nums:
+                    return sum([int(n) for n in nums]) / len(nums) * 1_000_000
+                return None
+            
+            df_ai_processed['salary_numeric'] = df_ai['salary'].apply(extract_salary)
+            df_ai_processed['job_group'] = 'Backend Developer'  # AI demo = Backend
+            df_ai_processed['level'] = df_ai['level']
+            
+            # Normalize city names
+            city_map = {'Hà Nội': 'Ha Noi', 'Hồ Chí Minh': 'Ho Chi Minh', 'Đà Nẵng': 'Da Nang'}
+            df_ai_processed['city'] = df_ai['city'].replace(city_map)
+            
+            # Load main data
+            if main_file.exists():
+                df_main = pd.read_csv(main_file)
+                logger.info(f"  ✓ Data hiện có: {len(df_main)} jobs")
+            else:
+                df_main = pd.DataFrame()
+                logger.info("  ! Chưa có data chính, tạo mới")
+            
+            # Merge
+            df_merged = pd.concat([df_main, df_ai_processed], ignore_index=True)
+            df_merged = df_merged.drop_duplicates(subset=['job_names', 'company_names'], keep='first')
+            
+            # Save
+            main_file.parent.mkdir(parents=True, exist_ok=True)
+            df_merged.to_csv(main_file, index=False, encoding='utf-8-sig')
+            
+            logger.info(f"  ✓ Tổng sau gộp: {len(df_merged)} jobs")
+            logger.info(f"  💾 Đã lưu: {main_file}")
+            logger.info("  🎯 Dashboard sẽ tự động dùng data mới!")
+            
+        except Exception as e:
+            logger.error(f"❌ Lỗi merge: {e}")
 
 
 def main():
@@ -207,6 +292,9 @@ def main():
     # Save results
     df = crawler.save_results()
     
+    # Auto merge to main data
+    crawler.auto_merge_to_main_data()
+    
     # Show sample data
     print("\n" + "="*70)
     print("📊 MẪU CÔNG VIỆC TRÍCH XUẤT BỞI AI")
@@ -223,8 +311,8 @@ def main():
     print("   2. Giải thích cách AI tự thích nghi khi web thay đổi")
     print("   3. So sánh với Selenium crawler truyền thống")
     print("   4. Nhấn mạnh: Không cần CSS selectors, tự sửa lỗi, ngôn ngữ tự nhiên")
-    print("\n💾 Dữ liệu mock đã lưu tại: data_raw/ITViec_AI_demo.csv")
-    print("🔄 Có thể tích hợp với dashboard hiện tại!")
+    print("\n💾 Dữ liệu đã tự động gộp vào: data_clean/clean_data.csv")
+    print("🔄 Refresh dashboard để thấy data AI!")
     print()
 
 if __name__ == "__main__":
