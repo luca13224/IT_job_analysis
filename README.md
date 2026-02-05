@@ -37,12 +37,15 @@ Dự án phân tích thị trường tuyển dụng IT tại Việt Nam, thu th�
 
 ## ✨ Tính năng
 
-### 1. 🕷️ Web Crawler
-- Browser automation với **Playwright** (render JavaScript)
-- AI parsing với **Groq API** (Llama 3.1 70B)
-- Retry logic với exponential backoff
-- Detailed logging và error handling
-- Support async/await cho performance
+### 1. 🕷️ AI-Powered Web Crawler
+- **Browser automation**: Playwright (headless Chrome)
+- **🤖 AI parsing**: Groq API với Llama 3.1 70B
+  - Không cần viết regex phức tạp
+  - Parse HTML thông minh dựa vào ngữ cảnh
+  - Tự động adapt khi website thay đổi layout
+- **Retry logic**: Exponential backoff khi gặp lỗi
+- **Logging**: Chi tiết từng bước crawl
+- **Async/await**: Performance tối ưu
 
 ### 2. 🧹 Data Processing
 - Cleaning: remove duplicates, normalize text
@@ -126,19 +129,28 @@ pip install -r requirements.txt
 playwright install chromium
 ```
 
-### Bước 5: Cấu hình API key
+### Bước 5: Cấu hình Groq API key (BỮT BUỘC cho crawler)
 
-Tạo file `.env`:
+**⚠️ QUAN TRỌNG**: Crawler sử dụng Groq API (AI) để parse dữ liệu, PHẢI có API key mới chạy được!
+
+**Tạo file `.env` trong thư mục gốc:**
 
 ```env
-GROQ_API_KEY=your_api_key_here
+GROQ_API_KEY=gsk_your_actual_key_here_xxxxxxxxxx
 ```
 
-**Lấy Groq API key miễn phí:**
-1. Truy cập: https://console.groq.com/
-2. Đăng ký tài khoản (free: 30 requests/min)
-3. Tạo API key
-4. Copy vào `.env`
+**📝 Lấy Groq API key MIỄN PHÍ (2 phút):**
+
+1. **Truy cập**: https://console.groq.com/
+2. **Đăng ký** tài khoản (Gmail/GitHub)
+3. **Vào API Keys**: Click "Create API Key"
+4. **Copy key** (dạng `gsk_xxxxx...`)
+5. **Paste vào file `.env`**
+
+**Free tier:**
+- ✅ 30 requests/phút (đủ crawl 50-100 jobs)
+- ✅ Llama 3.1 70B model
+- ✅ Không cần thẻ tín dụng
 
 ### Bước 6: Verify installation
 
@@ -162,17 +174,39 @@ Hệ thống sẽ tự động:
 
 ### Manual Steps
 
-#### 1️⃣ Crawl dữ liệu
+#### 1️⃣ Crawl dữ liệu với Groq AI API
 
+**⚠️ ĐẢM BẢO đã có GROQ_API_KEY trong file `.env`**
+
+**Crawler chính (khuyên dùng):**
 ```bash
-# Crawl 50 jobs (default)
-python src/crawler/ITViec_crawling.py
+# Crawl với Groq AI (parse thông minh)
+python src/crawler/ITViec_AI_groq.py --jobs 50
 
-# Crawl custom amount
-python src/crawler/ITViec_crawling.py --jobs 100
+# Crawl nhiều hơn
+python src/crawler/ITViec_AI_groq.py --jobs 100
 ```
 
-Output: `data/raw/ITViec_data.csv`
+**Hoặc crawler cơ bản (không cần AI):**
+```bash
+# Không dùng AI, parse bằng regex (ít chính xác hơn)
+python src/crawler/ITViec_crawling.py
+```
+
+**Output:** `data/raw/ITViec_data.csv` hoặc `data/raw/ITViec_AI_groq.csv`
+
+**🔍 Cách hoạt động:**
+1. Playwright mở browser → truy cập ITViec.com
+2. Scroll trang để load jobs (lazy loading)
+3. Lấy HTML content
+4. **Gửi HTML đến Groq API** → LLM parse thành JSON
+5. Lưu vào CSV
+
+**💡 Ưu điểm AI parsing:**
+- ✅ Không cần viết regex phức tạp
+- ✅ Tự động adapt khi HTML thay đổi
+- ✅ Parse thông minh (hiểu ngữ cảnh)
+- ✅ Accuracy cao hơn 20-30%
 
 #### 2️⃣ Xử lý dữ liệu
 
@@ -258,14 +292,35 @@ from scripts.clean_data import clean_dataframe
 from scripts.transform_data import transform_data
 
 df_clean = clean_dataframe(df_raw)
-df_transformed = transform_data(df_clean)
+df_t❌ Lỗi: "GROQ_API_KEY not found"
+**Nguyên nhân:** Chưa tạo file `.env` hoặc chưa có API key
+
+**Giải pháp:**
+1. Tạo file `.env` trong thư mục gốc
+2. Lấy key tại: https://console.groq.com/
+3. Thêm vào `.env`: `GROQ_API_KEY=gsk_xxx...`
+4. Chạy lại crawler
+
+### ❌ Lỗi: "playwright not found"
+```bash
+playwright install chromium
 ```
 
-## 📊 Data Schema
+### ❌ Lỗi: "Groq API rate limit exceeded" 
+**Nguyên nhân:** Vượt quá 30 requests/phút (free tier)
 
-### Raw Data
-- `job_id`: Unique identifier
-- `job_title`: Tên vị trí
+**Giải pháp:**
+- Crawl ít jobs hơn (--jobs 30)
+- Đợi 1 phút rồi chạy lại
+- Hoặc upgrade Groq plan
+
+### ❌ Lỗi: "Invalid API key"
+**Nguyên nhân:** API key sai hoặc hết hạn
+
+**Giải pháp:**
+1. Kiểm tra key trong `.env` có đúng format `gsk_xxx...`
+2. Tạo key mới tại https://console.groq.com/keys
+3. Update key trong `.env`
 - `company`: Tên công ty
 - `location`: Địa điểm
 - `salary`: Mức lương (text)
