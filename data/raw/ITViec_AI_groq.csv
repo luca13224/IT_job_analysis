@@ -1,0 +1,4 @@
+﻿job_title,company_name,salary,level,city,skills,description,crawled_at,method
+Software Engineer,FPT Software,Negotiable,mid,Hanoi,"Java, Python, JavaScript",Develop software applications,2026-02-05 15:04:32,Playwright + Groq Llama 3.1 70B
+Data Scientist,VNG Corporation,$1000-2000,senior,Ho Chi Minh,"Python, R, Machine Learning",Analyze data and build models,2026-02-05 15:04:32,Playwright + Groq Llama 3.1 70B
+DevOps Engineer,Sendo Technology,$800-1500,junior,Hanoi,"AWS, Docker, Kubernetes",Ensure smooth operation of systems,2026-02-05 15:04:32,Playwright + Groq Llama 3.1 70B

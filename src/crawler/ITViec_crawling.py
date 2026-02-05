@@ -227,7 +227,7 @@ def crawl_one_job(driver, title, crawled_jobs, csv_path):
 # ==========================
 def crawling_def(driver, url):
 
-    csv_path = os.path.join(os.path.dirname(__file__), "..", "..", "data_raw", "ITViec_data.csv")
+    csv_path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw", "ITViec_data.csv")
     csv_path = os.path.abspath(csv_path)
     crawled_jobs = get_crawled_jobs(csv_path)
     print("Đã crawl:", len(crawled_jobs), "job")

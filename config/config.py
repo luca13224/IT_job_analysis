@@ -6,8 +6,8 @@ from pathlib import Path
 
 # Project paths
 BASE_DIR = Path(__file__).parent.parent
-DATA_DIR = BASE_DIR / "data_raw"
-CLEAN_DATA_DIR = BASE_DIR / "data_clean"
+DATA_DIR = BASE_DIR / "data" / "raw"
+CLEAN_DATA_DIR = BASE_DIR / "data" / "processed"
 MODELS_DIR = BASE_DIR / "models"
 OUTPUTS_DIR = BASE_DIR / "outputs"
 LOGS_DIR = BASE_DIR / "logs"

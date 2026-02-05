@@ -189,22 +189,21 @@ RETURN ONLY THE JSON ARRAY, NO EXPLANATION."""
                     return []
             
             if isinstance(jobs, list) and len(jobs) > 0:
-                    
-                    # Add metadata
-                    for job in jobs:
-                        job['crawled_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        job['method'] = "Playwright + Groq Llama 3.1 70B"
-                    
-                    logger.info(f"📊 Đã extract {len(jobs)} jobs!")
-                    return jobs
-                else:
-                    logger.error("❌ Không tìm thấy JSON")
-                    return []
-                    
-            except json.JSONDecodeError as e:
-                logger.error(f"❌ Lỗi parse JSON: {e}")
-                logger.info(f"\n📝 Response:\n{result[:500]}...")
+                # Add metadata
+                for job in jobs:
+                    job['crawled_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    job['method'] = "Playwright + Groq Llama 3.1 70B"
+                
+                logger.info(f"📊 Đã extract {len(jobs)} jobs!")
+                return jobs
+            else:
+                logger.error("❌ Không tìm thấy JSON")
                 return []
+                    
+    except json.JSONDecodeError as e:
+        logger.error(f"❌ Lỗi parse JSON: {e}")
+        logger.info(f"\n📝 Response:\n{result[:500]}...")
+        return []
             
     except ImportError as e:
         logger.error(f"\n❌ Thiếu thư viện: {e}")
@@ -230,14 +229,14 @@ def save_and_merge(jobs_data):
     df = pd.DataFrame(jobs_data)
     
     # Save
-    output_path = Path(__file__).parent.parent.parent / "data_raw" / "ITViec_AI_groq.csv"
+    output_path = Path(__file__).parent.parent.parent / "data" / "raw" / "ITViec_AI_groq.csv"
     output_path.parent.mkdir(exist_ok=True)
     df.to_csv(output_path, index=False, encoding='utf-8-sig')
     logger.info(f"\n💾 Đã lưu: {output_path}")
     
     # Merge
     try:
-        main_file = Path(__file__).parent.parent.parent / "data_clean" / "clean_data.csv"
+        main_file = Path(__file__).parent.parent.parent / "data" / "processed" / "clean_data.csv"
         
         if not main_file.exists():
             return df

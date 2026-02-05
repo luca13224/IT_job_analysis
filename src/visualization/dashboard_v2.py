@@ -156,7 +156,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-@st.cache_data
+@st.cache_data(ttl=1)  # Cache 1 giây - force reload
 def load_data():
     """Load and cache data"""
     try:
@@ -175,7 +175,13 @@ def load_data():
         return df
     except FileNotFoundError:
         st.error(f"❌ Không tìm thấy dữ liệu: {CLEAN_CSV_PATH}")
-        st.info("💡 Hãy chạy xử lý dữ liệu trước: `python src/data_processing/processor.py`")
+        st.info("💡 File cần: data/processed/clean_data.csv")
+        st.info("🔄 Chạy: `python src/crawler/ITViec_AI_demo.py` để tạo data")
+        st.stop()
+    except Exception as e:
+        st.error(f"❌ Lỗi đọc dữ liệu: {e}")
+        st.info(f"📁 Path: {CLEAN_CSV_PATH}")
+        st.info(f"📊 Exists: {CLEAN_CSV_PATH.exists()}")
         st.stop()
 
 
