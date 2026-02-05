@@ -187,13 +187,7 @@ python src/crawler/ITViec_AI_groq.py --jobs 50
 python src/crawler/ITViec_AI_groq.py --jobs 100
 ```
 
-**Hoặc crawler cơ bản (không cần AI):**
-```bash
-# Không dùng AI, parse bằng regex (ít chính xác hơn)
-python src/crawler/ITViec_crawling.py
-```
-
-**Output:** `data/raw/ITViec_data.csv` hoặc `data/raw/ITViec_AI_groq.csv`
+**Output:** `data/raw/ITViec_data.csv`
 
 **🔍 Cách hoạt động:**
 1. Playwright mở browser → truy cập ITViec.com
@@ -271,18 +265,12 @@ IT-job-analysis-VN/
 
 ### Crawler
 
-```python
-from src.crawler.ITViec_crawling import crawl_jobs
+```bash
+# Crawl với AI-powered crawler
+python src/crawler/ITViec_AI_groq.py --jobs 50
 
-# Basic
-jobs = crawl_jobs(max_jobs=50)
-
-# Advanced
-jobs = crawl_jobs(
-    max_jobs=100,
-    keywords=["Python", "Java"],
-    headless=True
-)
+# Crawl nhiều jobs
+python src/crawler/ITViec_AI_groq.py --jobs 100
 ```
 
 ### Data Processing
