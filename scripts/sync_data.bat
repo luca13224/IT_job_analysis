@@ -7,15 +7,13 @@ echo.
 REM Change to project root
 cd /d "%~dp0\.."
 
-REM Copy from new location to old location
-copy /Y "data\processed\clean_data.csv" "data_clean\clean_data.csv" >nul
-
-if %errorlevel% equ 0 (
-    echo ✅ Synced: data\processed → data_clean
+REM Verify data in standard location
+if exist "data\processed\clean_data.csv" (
+    echo ✅ Data ready: data\processed\clean_data.csv
     echo.
-    python -c "import pandas as pd; df=pd.read_csv('data_clean/clean_data.csv'); print(f'📊 Jobs: {len(df):,}')"
+    python -c "import pandas as pd; df=pd.read_csv('data/processed/clean_data.csv'); print(f'📊 Jobs: {len(df):,}')"
 ) else (
-    echo ❌ Sync failed!
+    echo ❌ Data file not found!
 )
 
 echo.

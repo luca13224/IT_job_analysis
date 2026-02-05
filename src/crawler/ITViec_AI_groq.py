@@ -37,6 +37,33 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 
+def extract_json_array(text):
+    """Extract JSON array from LLM response (handles code fences)."""
+    if not text:
+        return None
+
+    # Strip code fences if present
+    if "```" in text:
+        parts = text.split("```")
+        # Prefer the first fenced block content
+        if len(parts) >= 2:
+            text = parts[1]
+            # Remove optional language tag
+            if text.strip().startswith("json"):
+                text = text.strip()[4:]
+
+    # Try to locate JSON array
+    start = text.find('[')
+    end = text.rfind(']') + 1
+    if start == -1 or end <= start:
+        return None
+
+    try:
+        return json.loads(text[start:end])
+    except Exception:
+        return None
+
+
 async def crawl_with_groq(num_jobs=20):
     """Crawl ITViec bằng Playwright + Groq API"""
     
@@ -109,7 +136,7 @@ async def crawl_with_groq(num_jobs=20):
             logger.info("🧠 Đang gửi HTML cho Groq AI...")
             logger.info("⏱️ Đợi ~30 giây (Groq siêu nhanh)...\n")
             
-            prompt = f"""You are a web scraping expert. Extract exactly {num_jobs} jobs from this ITViec.com HTML.
+            prompt = f"""You are a web scraping expert. Extract up to {num_jobs} jobs from this ITViec.com HTML.
 
 FIND job listings in the HTML - they usually have:
 - Job titles (h3, h2, or class="job-title")
@@ -126,7 +153,7 @@ For EACH job you find, extract:
 - skills: Programming languages/tech mentioned
 - description: Brief job summary
 
-Return a JSON array with {num_jobs} jobs. If you find fewer jobs, return what you found.
+Return a JSON array with up to {num_jobs} jobs. If you find fewer jobs, return what you found.
 
 Format:
 [
@@ -144,7 +171,7 @@ Format:
 HTML:
 {html_snippet}
 
-RETURN ONLY THE JSON ARRAY, NO EXPLANATION."""
+RETURN ONLY THE RAW JSON ARRAY. DO NOT WRAP WITH CODE FENCES OR EXTRA TEXT."""
             
             # Call Groq API
             response = client.chat.completions.create(
@@ -168,25 +195,11 @@ RETURN ONLY THE JSON ARRAY, NO EXPLANATION."""
             logger.info(f"📝 Response length: {len(result)} chars")
             
             # Parse JSON with better error handling
-            try:
-                # Try direct parse first
-                jobs = json.loads(result)
-            except json.JSONDecodeError:
-                # Fallback: extract JSON array
-                try:
-                    json_start = result.find('[')
-                    json_end = result.rfind(']') + 1
-                    
-                    if json_start != -1 and json_end > json_start:
-                        json_str = result[json_start:json_end]
-                        jobs = json.loads(json_str)
-                    else:
-                        logger.error("❌ Không tìm thấy JSON")
-                        logger.info(f"Response: {result[:500]}")
-                        return []
-                except Exception as e:
-                    logger.error(f"❌ Parse error: {e}")
-                    return []
+            jobs = extract_json_array(result)
+            if not jobs:
+                logger.error("❌ Không tìm thấy JSON")
+                logger.info(f"Response: {result[:500]}")
+                return []
             
             if isinstance(jobs, list) and len(jobs) > 0:
                 # Add metadata
@@ -233,6 +246,38 @@ def save_and_merge(jobs_data):
     output_path.parent.mkdir(exist_ok=True)
     df.to_csv(output_path, index=False, encoding='utf-8-sig')
     logger.info(f"\n💾 Đã lưu: {output_path}")
+
+    # Sync into main raw file (append + dedupe)
+    try:
+        raw_main = Path(__file__).parent.parent.parent / "data" / "raw" / "ITViec_data.csv"
+
+        df_processed = pd.DataFrame()
+        df_processed['job_names'] = df['job_title']
+        df_processed['company_names'] = df['company_name']
+        df_processed['salaries'] = df['salary']
+        df_processed['position_names'] = df['job_title']
+        df_processed['kind_jobs'] = 'At office'
+        df_processed['array_skills'] = df['skills']
+        df_processed['locate_names'] = df['city']
+        df_processed['exp_skills'] = df['description']
+        df_processed['domain_arr'] = '[]'
+        df_processed['post_dates_formatted'] = df['crawled_at']
+
+        if raw_main.exists():
+            df_raw = pd.read_csv(raw_main)
+            before_raw = len(df_raw)
+            df_raw_merged = pd.concat([df_raw, df_processed], ignore_index=True)
+            df_raw_merged = df_raw_merged.drop_duplicates(subset=['job_names', 'company_names'])
+            df_raw_merged.to_csv(raw_main, index=False, encoding='utf-8-sig')
+            logger.info("\n🔄 Đã cập nhật data/raw/ITViec_data.csv")
+            logger.info(f"  ✓ Trước: {before_raw} jobs")
+            logger.info(f"  ✓ Sau: {len(df_raw_merged)} jobs (+{len(df_raw_merged) - before_raw})")
+        else:
+            df_processed.to_csv(raw_main, index=False, encoding='utf-8-sig')
+            logger.info("\n💾 Tạo mới data/raw/ITViec_data.csv")
+            logger.info(f"  ✓ Tổng: {len(df_processed)} jobs")
+    except Exception as e:
+        logger.error(f"❌ Lỗi cập nhật raw data: {e}")
     
     # Merge
     try:
@@ -301,17 +346,46 @@ async def main():
     print(f"⏱️ Thời gian: ~1-2 phút")
     print("="*70 + "\n")
     
-    # Crawl
-    jobs = await crawl_with_groq(num_jobs=args.jobs)
+    # Crawl in batches to avoid token limits
+    target = args.jobs
+    batch_size = 20
+    all_jobs = []
+    attempts = 0
+
+    while len(all_jobs) < target and attempts < 5:
+        remaining = target - len(all_jobs)
+        batch = min(batch_size, remaining)
+        attempts += 1
+
+        jobs = await crawl_with_groq(num_jobs=batch)
+        if not jobs:
+            break
+
+        all_jobs.extend(jobs)
+
+        # Deduplicate by title + company
+        seen = set()
+        unique = []
+        for job in all_jobs:
+            key = (str(job.get('job_title', '')).strip().lower(),
+                   str(job.get('company_name', '')).strip().lower())
+            if key in seen:
+                continue
+            seen.add(key)
+            unique.append(job)
+        all_jobs = unique
+
+        if len(all_jobs) < target:
+            await asyncio.sleep(6)
     
-    if len(jobs) == 0:
+    if len(all_jobs) == 0:
         logger.error("\n❌ Crawl thất bại")
         logger.info("\n💡 Lấy API key miễn phí:")
         logger.info("   https://console.groq.com")
         return
     
     # Save
-    df = save_and_merge(jobs)
+    df = save_and_merge(all_jobs)
     
     if df is not None:
         print("\n" + "="*70)

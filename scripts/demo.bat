@@ -43,10 +43,8 @@ if %errorlevel% neq 0 (
 echo.
 echo ✅ Crawl hoàn tất!
 
-REM Sync data từ data/processed → data_clean
-echo 🔄 Đang sync data...
-copy /Y "data\processed\clean_data.csv" "data_clean\clean_data.csv" >nul
-echo ✅ Data đã sync!
+REM Data already in standard location: data/processed/clean_data.csv
+echo ✅ Data location: data/processed/clean_data.csv
 
 timeout /t 2 >nul
 

@@ -4,9 +4,17 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from collections import Counter
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from config.config import CLEAN_CSV_PATH
 
 # đọc dữ liệu
-df = pd.read_csv(r"D:\I. KhongPhanLoai\IT-job-analysis-VN\data_clean\clean_data.csv")
+df = pd.read_csv(CLEAN_CSV_PATH)
 
 
 # ==================================================
