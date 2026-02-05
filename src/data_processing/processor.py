@@ -192,9 +192,31 @@ class DataProcessor:
         return self
     
     def save_cleaned_data(self):
-        """Save cleaned data to CSV"""
+        """Save cleaned data to CSV with merge and deduplication"""
         print(f"💾 Saving cleaned data to {self.output_path}")
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Check if output file exists and merge with existing data
+        if self.output_path.exists():
+            print(f"📂 Found existing output, merging data...")
+            existing_df = pd.read_csv(self.output_path, encoding='utf-8-sig')
+            print(f"   Existing: {len(existing_df)} records")
+            print(f"   New: {len(self.df)} records")
+            
+            # Merge
+            merged_df = pd.concat([existing_df, self.df], ignore_index=True)
+            
+            # Deduplicate by all columns to avoid identical jobs
+            original_count = len(merged_df)
+            merged_df = merged_df.drop_duplicates(keep='first')
+            dedupe_count = original_count - len(merged_df)
+            
+            if dedupe_count > 0:
+                print(f"   🔄 Removed {dedupe_count} duplicates")
+            
+            self.df = merged_df
+            print(f"   ✓ Merged to {len(self.df)} total records")
+        
         self.df.to_csv(self.output_path, index=False, encoding='utf-8-sig')
         print(f"✓ Saved {len(self.df)} records")
         return self
